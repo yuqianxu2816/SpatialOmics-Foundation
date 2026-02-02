@@ -56,21 +56,36 @@ Optional input (if you prefer to read directly from mzML)
 
 
 3️. mgf (Direct input for your self-supervised model) 
+
 BEGIN IONS
+
 PEMASS=...
+
 CHARGE=...
+
 RTINSECONDS=...
+
 m/z intensity
+
 m/z intensity
+
 ...
+
 END IONS 
 
+
 In this project, the input to the self-supervised model is MS/MS spectra in MGF format, with each BEGIN IONS … END IONS block considered as a training sample.
+
 Data format seen by the model:
+
 A spectrum = a set of (m/z, intensity) pairs
 
 Can be regarded as:
+
 Sequence
+
 Set
+
 Sparse
+
 signal

@@ -11,6 +11,7 @@ Output:
 1. List of spectra in Python object format
 
 
+
 Module 2: Spectrum Preprocessing 
 
 Function: 
@@ -26,6 +27,7 @@ Output:
 1. Token sequence usable by the model
 
 
+
 Module 3: Masked Self-supervised Learning 
 
 Function: 
@@ -39,6 +41,7 @@ Model:
 1. Transformer / MLP encoder (a simplified version will suffice)
 
 
+
 Module 4: Embedding Extraction
 
 Function: 
@@ -46,6 +49,7 @@ Function:
 1. Output spectrum-level embeddings
 
 2. Aggregate into sample-level embeddings (mean / attention)
+
 
 
 Module 5: Downstream Analysis (Subsequent) 

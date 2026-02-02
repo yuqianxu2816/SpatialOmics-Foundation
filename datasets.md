@@ -80,16 +80,6 @@ END IONS
 
 In this project, the input to the self-supervised model is MS/MS spectra in MGF format, with each BEGIN IONS … END IONS block considered as a training sample.
 
-Data format seen by the model:
+Data format seen by the model: A spectrum = a set of (m/z, intensity) pairs
 
-A spectrum = a set of (m/z, intensity) pairs
-
-Can be regarded as:
-
-Sequence
-
-Set
-
-Sparse
-
-signal
+Can be regarded as: Sequence/Set/Sparse/Signal

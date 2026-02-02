@@ -2,9 +2,9 @@
 data_io.py
 
 Module 1: Data I/O
-- Read mzML
-- Extract MS2 spectra (m/z, intensity) and precursor m/z (pepmass)
-- Write spectra to MGF
+1. Read mzML
+2. Extract MS2 spectra (m/z, intensity) and precursor m/z (pepmass)
+3. Write spectra to MGF
 
 This module uses pyteomics (mzml, mgf).
 """
@@ -23,13 +23,13 @@ def mzml_to_mgf(
     """
     Convert an mzML file to an MGF file by extracting spectra of a given MS level.
 
-    Args:
-        mzml_path: Path to input .mzML file
-        mgf_out_path: Path to output .mgf file
-        ms_level: MS level to extract (default: 2)
+    Input:
+    1. mzml_path: Path to input .mzML file
+    2. mgf_out_path: Path to output .mgf file
+    3. ms_level: MS level to extract (default: 2)
 
-    Returns:
-        Number of spectra written to the output MGF.
+    Output:
+    1. Number of spectra written to the output MGF.
     """
     spectra: List[Dict[str, Any]] = []
 
@@ -60,14 +60,11 @@ def mzml_to_mgf(
 
 
 def main() -> None:
-    """
-    Example usage (edit paths as needed).
-    """
+   
     n = mzml_to_mgf(
         "09062023_Mehta_GR10000524_DDRC_Sample4_561_cirrhotic.mzML",
         "output.mgf"
     )
-    print(f"Wrote {n} MS2 spectra to output.mgf")
 
 
 if __name__ == "__main__":

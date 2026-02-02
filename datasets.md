@@ -1,3 +1,7 @@
+Link to dataset:
+
+https://www.ebi.ac.uk/pride/archive/projects/PXD047546
+
 The actual input data for this project consists of raw LC-MS/MS mass spectrum files (.raw) and their derived chromatogram files (.mzML / .mgf); the remaining .txt / .fasta files are used for grouping information, validation, or comparison with the results of the original paper, but are not used as direct inputs for the self-supervised model.
 
 Core Input: 

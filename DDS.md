@@ -1,61 +1,54 @@
-Module 1: Data I/O Module 
+## Module 1: Data I/O
 
-Function:
+### Function
+- Read `.mgf` files  
+- Parse spectra and associated metadata  
 
-1. Read .mgf files 
-
-2. Parse spectra and metadata 
-
-Output:
-
-1. List of spectra in Python object format
+### Output
+- List of spectra in Python object format  
 
 
+---
 
-Module 2: Spectrum Preprocessing 
+## Module 2: Spectrum Preprocessing
 
-Function: 
+### Function
+- m/z binning  
+- Intensity normalization  
+- Peak number pruning / padding  
 
-1. m/z binning
-  
-2. Intensity normalization
-
-3. Peak number pruning/padding
-
-Output: 
-
-1. Token sequence usable by the model
+### Output
+- Token sequence usable by the model  
 
 
+---
 
-Module 3: Masked Self-supervised Learning 
+## Module 3: Masked Self-supervised Learning
 
-Function: 
+### Function
+- Randomly mask a subset of peaks  
+- Define reconstruction objectives  
 
-1. Randomly mask some peaks
-
-2. Define reconstruction objectives
-
-Model: 
-
-1. Transformer / MLP encoder (a simplified version will suffice)
-
+### Model
+- Transformer or MLP encoder  
+  *(a simplified version is sufficient for initial experiments)*  
 
 
-Module 4: Embedding Extraction
+---
 
-Function: 
+## Module 4: Embedding Extraction
 
-1. Output spectrum-level embeddings
+### Function
+- Output spectrum-level embeddings  
+- Aggregate into sample-level embeddings  
+  - Mean pooling  
+  - Attention-based pooling  
 
-2. Aggregate into sample-level embeddings (mean / attention)
 
+---
 
+## Module 5: Downstream Analysis
 
-Module 5: Downstream Analysis (Subsequent) 
-
-Function: 
-
-1. HCC vs cirrhosis classification
-
-2. Embedding visualization (PCA / UMAP)
+### Function
+- HCC vs. cirrhosis classification  
+- Embedding visualization (PCA / UMAP)  

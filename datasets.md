@@ -66,12 +66,19 @@ The remaining `.txt` / `.fasta` files are used for grouping information, validat
 ### 3. `.mgf` (Direct Input for the Self-supervised Model)
 
 BEGIN IONS
+
 PEMASS=...
+
 CHARGE=...
+
 RTINSECONDS=...
+
 m/z intensity
+
 m/z intensity
+
 ...
+
 END IONS
 
 

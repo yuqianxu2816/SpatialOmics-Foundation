@@ -1,3 +1,64 @@
-This project aims to develop a deep learning method for mass spectrometry representation based on self-supervised masked learning, utilizing serum mass spectrometry data from hepatocellular carcinoma (HCC) and cirrhosis. Unlike traditional supervised machine learning methods that rely on manual feature engineering and explicit labels (such as HCC vs cirrhosis), this project first learns general representations (spectral embeddings) of MS/MS spectra through self-supervision, and then applies this representation to downstream disease differentiation tasks, thereby exploring whether more robust and transferable representations can be obtained from small-sample, highly heterogeneous glycoproteomics data.
+# Software Requirements Specification (SRS)
 
-Each of cirrhotic sample and HCC sample contains 5 raw files, each raw file has the size around 2 to 3 GB. For the purpose to test the deep learning method and limitation of computing resource, we only use 1 cirrhotic raw file and 1 HCC raw file.
+## 1. Overview
+
+This project aims to develop a deep learning method for mass spectrometry representation based on self-supervised masked learning, utilizing serum mass spectrometry data from hepatocellular carcinoma (HCC) and cirrhosis.
+
+Unlike traditional supervised machine learning approaches that rely on manual feature engineering and explicit labels (e.g., HCC vs. cirrhosis), this project first learns general-purpose representations (spectral embeddings) of MS/MS spectra through self-supervision. These representations are then applied to downstream disease differentiation tasks, with the goal of exploring whether more robust and transferable representations can be obtained from small-sample, highly heterogeneous glycoproteomics data.
+
+---
+
+## 2. Intended Use and Use Cases
+
+### 2.1 Intended Use
+
+The software is intended for researchers working with LC-MS/MS proteomics or glycoproteomics data who wish to learn general-purpose spectral representations without relying on manual feature engineering or large labeled datasets.
+
+### 2.2 Use Cases
+
+Typical use cases include:
+
+- Learning spectrum-level embeddings from MS/MS data using masked self-supervised learning
+- Aggregating spectrum embeddings to represent biological samples
+- Exploring whether learned embeddings capture disease-related structure (e.g., HCC vs. cirrhosis) through visualization or simple downstream models
+
+---
+
+## 3. Software Features
+
+The software package provides the following core functionalities:
+
+- Conversion and ingestion of mass spectrometry data in open formats (mzML and MGF)
+- Extraction and preprocessing of MS/MS spectra as `(m/z, intensity)` pairs
+- Self-supervised training of a masked reconstruction model to learn spectrum embeddings
+- Generation of fixed-dimensional spectrum-level and sample-level embeddings
+- Basic evaluation of learned embeddings using dimensionality reduction methods (e.g., PCA or UMAP)
+
+### 3.1 Outputs
+
+The output of the software includes:
+
+- Processed MGF files
+- Learned spectral embeddings
+- Visualization plots for embedding evaluation
+
+---
+
+## 4. Data Access and Execution
+
+### 4.1 Data Access
+
+Input data are obtained from a public proteomics repository and provided as raw LC-MS/MS files. During development, a small representative subset of the data (e.g., one cirrhotic sample and one HCC sample) is used to enable rapid testing and iteration.
+
+The software is designed to operate on these subsets during development and can later be applied to the full dataset for large-scale validation.
+
+### 4.2 Execution Model
+
+Users can run the provided Python scripts to perform:
+
+- Data conversion
+- Spectrum preprocessing
+- Model training
+- Embedding extraction
+
+The software follows a modular design, allowing individual components (e.g., data conversion or embedding extraction) to be executed independently depending on the user’s needs.

@@ -16,7 +16,7 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 ## Calculation Steps
 
 
-### Step 1 — Read the MGF file
+### Module 1 — Read the MGF file
 
 **Input**
 
@@ -49,7 +49,7 @@ Spectrum = {
   
 }
 
-### Step 2 — Extract the (m/z, intensity) pairs from each spectrum
+### Module 2 — Extract the (m/z, intensity) pairs from each spectrum
 
 **Input**
 
@@ -74,7 +74,7 @@ Spectrum = {
 - peaks: Array[N, 2]
  - column 0 = m/z, column 1 = intensity
 
-### Step 3 — Discretize / tokenize the spectrum (m/z binning)
+### Module 3 — Discretize / tokenize the spectrum (m/z binning)
 
 **Input**
 
@@ -90,7 +90,9 @@ Spectrum = {
 - x: Vector[B]
 - aggregated (sum or max) and often normalized intensity per bin
 
-### Step 4 — Randomly mask some peaks
+### Module 4 — masked self-supervised learning
+
+Masking is applied only during self-supervised pretraining. During downstream inference and classification, no masking is applied.
 
 **Input**
 
@@ -107,8 +109,8 @@ Spectrum = {
 - targets: Vector[B] (ground truth values for masked bins only)
 
 
-### Step 5 — Train the model to predict masked peaks
-This is the self-supervised training step.
+### Module 5 — Train the model to predict masked peaks
+This training step is fully self-supervised and does not use disease labels (HCC vs cirrhosis).
 
 **Model input**
 
@@ -125,8 +127,8 @@ This is the self-supervised training step.
 - loss:   float
 
 
-### Step 6 — Extract spectrum-level embeddings
-After training (or during inference):
+### Module 6 — Extract spectrum-level embeddings
+After self-supervised pretraining, the pretrained encoder is used to extract spectrum-level embeddings.
 
 **Input**
 
@@ -140,7 +142,7 @@ After training (or during inference):
 
 ### Downstream Tasks
 
-### Step 7 — Aggregate spectrum-level embeddings to sample-level
+### Module 7 — Aggregate spectrum-level embeddings to sample-level
 **Input**
 
 - A set of embeddings from one raw file: (Each embedding corresponds to one MS/MS spectrum from the same sample.)
@@ -170,7 +172,9 @@ Due to limited computational resources:
 
 This setup is sufficient for validating the proposed pipeline.
 
-### Step 8 — Train a classifier on sample-level embeddings
+### Module 8 — Train a classifier on sample-level embeddings
+This step is a downstream supervised task that uses the learned sample-level embeddings as fixed representations.
+
 **Input**
 - Sample-level embeddings and corresponding labels:
   - X ∈ R^{2 x d},  y = [0, 1]

@@ -52,6 +52,8 @@ Spectrum = {
 
 **Input**
 
+- One Spectrum object from Step 1
+
 - Spectrum["peaks"] = List[(mz, intensity)]
 
 **Output**
@@ -76,86 +78,88 @@ Spectrum = {
 **Input**
 
 - peaks: Array[N, 2]
-- Parameters:
+- Binning parameters:
+  - mz_min, mz_max (e.g., 100–2000)
+  - bin_width (e.g., 1.0 or 0.1 Da)
 
--- mz_min, mz_max (e.g., 100–2000)
-
--- bin_width (e.g., 1.0 or 0.1 Da)
-
-Output
-
-x: Vector[B]
- aggregated (sum or max) and often normalized intensity per bin
+**Output**
+- A fixed-length intensity vector x of length B (number of bins)
+  
+**Output format**
+- x: Vector[B]
+- aggregated (sum or max) and often normalized intensity per bin
 
 ### Step 4 — Randomly mask some peaks
-Input
 
-x: Vector[B]
-mask_ratio (e.g., 0.15)
+**Input**
 
-Mask strategies
+- Binned vector x: Vector[B]
+- mask_ratio (e.g., 0.15)
 
-random bins
+- Mask strategies
+  - random bins
+  - structured masking (contiguous ranges)
 
-structured masking (contiguous ranges)
+**Output**
+- x_masked: Vector[B] (masked input)
+- mask: Vector[B] (binary indicator: 1 = masked bin)
+- targets: Vector[B] (ground truth values for masked bins only)
 
-Output
-
-x_masked: Vector[B]
-mask:     Vector[B]   # 1 = masked, 0 = visible
-targets:  Vector[B]   # ground truth for masked bins
-masked bins are set to 0 or a special value
-
-targets are meaningful only where mask = 1
 
 ### Step 5 — Train the model to predict masked peaks
 This is the self-supervised training step.
 
-Model input
+**Model input**
 
-x_masked: Tensor[batch, B]
-mask:     Tensor[batch, B]
-targets:  Tensor[batch, B]
-Model output (training)
+- x_masked (or masked token sequence): Tensor[batch, B]
+- mask (to compute loss only on masked locations): Tensor[batch, B]
+- targets: Tensor[batch, B]
+  
+**Model output (training)**
+- y_pred: reconstructed intensities (or token logits) over the full vector/sequence
+- loss: computed on masked positions only
 
-y_pred: Tensor[batch, B]
-loss:   float
-loss computed only on masked positions
+**output format**
+- y_pred: Tensor[batch, B]
+- loss:   float
 
 
 ### Step 6 — Extract spectrum-level embeddings
 After training (or during inference):
 
-Input
+**Input**
 
-unmasked or lightly masked spectrum representation (x or tokenized form)
+- unmasked or lightly masked spectrum representation (x or tokenized form)
+  - x: Vector[B] or (token_ids, token_values, attention_mask)
 
-Output
+**Output**
 
-spectrum_embedding: Vector[d]
-fixed-dimensional embedding (e.g., d = 128)
+- A spectrum embedding vector:
+  - embedding ∈ R^d (e.g., d = 128)
 
-Downstream Tasks
+### Downstream Tasks
 
 ### Step 7 — Aggregate spectrum-level embeddings to sample-level
-Input
+**Input**
 
-A set of embeddings from one raw file:
+- A set of embeddings from one raw file: (Each embedding corresponds to one MS/MS spectrum from the same sample.)
+  - E = {e1, e2, ..., en},  ei ∈ R^d
 
-E = {e1, e2, ..., en},  ei in R^d
-Output
+**Output**
+- A single sample-level embedding:
+  - z ∈ R^d
+**Aggregation methods**
 
-z in R^d
-Aggregation methods
+- Mean pooling (used in this project)
 
-Mean pooling (used in this project)
+- Median pooling
 
-Median pooling
-
-Attention-based pooling (optional)
-
-sample_embedding: Vector[d]
-Note
+- Attention-based pooling (optional)
+  
+**Output format**
+- sample_embedding: Vector[d]
+  
+**Note**
 
 Due to limited computational resources:
 
@@ -166,26 +170,25 @@ Due to limited computational resources:
 This setup is sufficient for validating the proposed pipeline.
 
 ### Step 8 — Train a classifier on sample-level embeddings
-Input
+**Input**
+- Sample-level embeddings and corresponding labels:
+  - X ∈ R^{2 x d},  y = [0, 1]
+    - 0 = cirrhosis
+    - 1 = HCC
 
-X in R^{2 x d},  y = [0, 1]
-0 = cirrhosis
+**Model**
 
-1 = HCC
+A simple supervised classifier is used, such as:
 
-Model
+- Logistic regression
 
-Logistic regression
+- Linear layer + sigmoid
 
-Linear layer + sigmoid
+- Linear SVM
 
-Linear SVM
+**Output**
 
-Output
-
-y_hat in {0, 1}
-or
-P(HCC | sample)
+- y_hat ∈ {0, 1} or P(HCC | sample)
 
 
 ---

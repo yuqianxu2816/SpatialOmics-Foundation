@@ -1,8 +1,3 @@
-## 版本1 ##:
-
-
-The output of Module 3 serves as the input to Module 4, enabling masked self-supervised training. The pretrained encoder from Modules 4–5 is reused in Module 6 to generate spectrum-level embeddings, which are then aggregated in Module 7.
-
 ### Objective
 
 For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
@@ -11,7 +6,6 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 
 - Input: one MS/MS spectrum (m/z–intensity list)
 - Output: embedding in R^d (e.g., d = 128)
-
 
 ---
 
@@ -198,60 +192,7 @@ A simple supervised classifier is used, such as:
 - y_hat ∈ {0, 1} or P(HCC | sample)
 
 
-## 版本2 ##
 
+### What connects the modules
 
-## Module 1: Data I/O
-
-### Function
-- Read `.mgf` files  
-- Parse spectra and associated metadata  
-
-### Output
-- List of spectra in Python object format  
-
-
----
-
-## Module 2: Spectrum Preprocessing
-
-### Function
-- m/z binning  
-- Intensity normalization  
-- Peak number pruning / padding  
-
-### Output
-- Token sequence usable by the model  
-
-
----
-
-## Module 3: Masked Self-supervised Learning
-
-### Function
-- Randomly mask a subset of peaks  
-- Define reconstruction objectives  
-
-### Model
-- Transformer or MLP encoder  
-  *(a simplified version is sufficient for initial experiments)*  
-
-
----
-
-## Module 4: Embedding Extraction
-
-### Function
-- Output spectrum-level embeddings  
-- Aggregate into sample-level embeddings  
-  - Mean pooling  
-  - Attention-based pooling  
-
-
----
-
-## Module 5: Downstream Analysis
-
-### Function
-- HCC vs. cirrhosis classification  
-- Embedding visualization (PCA / UMAP)  
+The output of Module 3 serves as the input to Module 4, enabling masked self-supervised training. The pretrained encoder from Modules 4–5 is reused in Module 6 to generate spectrum-level embeddings, which are then aggregated in Module 7.

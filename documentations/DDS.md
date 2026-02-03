@@ -192,7 +192,8 @@ A simple supervised classifier is used, such as:
 - y_hat ∈ {0, 1} or P(HCC | sample)
 
 
+---
 
-### What connects the modules
+## What connects the modules
 
 The output of Module 3 serves as the input to Module 4, enabling masked self-supervised training. The pretrained encoder from Modules 4–5 is reused in Module 6 to generate spectrum-level embeddings, which are then aggregated in Module 7.

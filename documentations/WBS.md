@@ -38,7 +38,7 @@ END IONS
 
 **Output format (Python-like)**
 
-spectra: List[Spectrum]
+- spectra: List[Spectrum]
 
 Spectrum = {
 
@@ -49,35 +49,38 @@ Spectrum = {
 }
 
 ### Step 2 — Extract the (m/z, intensity) pairs from each spectrum
-Input
 
-Spectrum["peaks"] = List[(mz, intensity)]
-Output
+**Input**
 
-Numeric peak list (possibly cleaned or filtered)
+- Spectrum["peaks"] = List[(mz, intensity)]
 
-Optional filtering
+**Output**
 
-remove zero or negative intensity
+- Numeric peak list (possibly cleaned or filtered)
 
-restrict m/z range
+**Optional filtering**
 
-keep top-N peaks
+- remove zero or negative intensity
 
-Output format
+- restrict m/z range
 
-peaks: Array[N, 2]
- column 0 = m/z, column 1 = intensity
+- keep top-N peaks
+
+**Output format**
+
+- peaks: Array[N, 2]
+ - column 0 = m/z, column 1 = intensity
 
 ### Step 3 — Discretize / tokenize the spectrum (m/z binning)
-Input
 
-peaks: Array[N, 2]
-Parameters
+**Input**
 
-mz_min, mz_max (e.g., 100–2000)
+- peaks: Array[N, 2]
+- Parameters:
 
-bin_width (e.g., 1.0 or 0.1 Da)
+-- mz_min, mz_max (e.g., 100–2000)
+
+-- bin_width (e.g., 1.0 or 0.1 Da)
 
 Output
 

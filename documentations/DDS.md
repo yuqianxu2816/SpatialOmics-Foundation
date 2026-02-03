@@ -18,22 +18,17 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 
 - File: `*.mgf`
 - Format: plain text file containing multiple blocks:
-
-BEGIN IONS
-
-m/z intensity
-
-m/z intensity
-
-...
-
-END IONS
+  - BEGIN IONS
+  - m/z intensity
+  - m/z intensity
+  - ...
+  - END IONS
 
 **Output**
 
 - A list of spectrum objects (one per BEGIN IONS ... END IONS block)
 
-**Output format (Python-like)**
+**Output format**
 
 - spectra: List[Spectrum]
 

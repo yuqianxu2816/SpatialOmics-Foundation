@@ -195,25 +195,176 @@ A simple supervised classifier is used, such as:
 
 ## Problem 2B
 
+# Problem 2B
 
-### Activity 1: MGF Data Analysis
+## Activity 1: MGF Data Analysis
 
-- **Task:** Implement MGF parser  
-- **Deliverable:** Spectrum Object List  
-- **Completion:** Capable of correctly reading ≥1 MGF file  
+### Action 1.1 — Implement MGF parser
+
+**Estimated time:** 2–3 hours
+
+**Sub-tasks:**
+- Parse `BEGIN IONS` / `END IONS` blocks
+- Extract metadata fields (e.g., `PEPMASS`, `CHARGE`, `RTINSECONDS`)
+- Parse `(m/z, intensity)` peak pairs
+- Handle malformed or empty lines
+
+**Deliverable:**
+- A reusable MGF parser function (e.g., `load_mgf()`)
+- Output as a list of spectrum objects
+
+**Completion criteria:**
+- The parser can correctly read the MGF file giben
+- The number of parsed spectra matches the expected count
+- Each spectrum object contains the peak list correctly
+
+---
+
+### Action 1.2 — Basic spectrum sanity check
+
+**Estimated time:** 2 hours
+
+**Sub-tasks:**
+- Verify m/z and intensity values are numeric
+- Remove peaks with zero or negative intensity
+- Optionally restrict m/z range (e.g., 100–2000)
+
+**Deliverable:**
+- Cleaned spectrum objects ready for preprocessing
+
+**Completion criteria:**
+- No invalid peaks remain
+- Each spectrum contains ≥1 valid peak
 
 
-### Activity 2: Masked Self-Supervised Model
+**Total time for Activity 1:** **~4–5 hours**
 
-- **Task:** Implement the random peak masking strategy  
-- **Deliverable:** Trainable self-supervised model  
-- **Completion:** Loss is convergent  
+---
 
+## Activity 2: Masked Self-Supervised Model
 
-### Activity 3: Embedding Evaluation
+### Action 2.1 — Implement random peak masking strategy
 
-- **Task:** Compare the distribution of HCC (Hepatocellular Carcinoma) and cirrhosis embeddings  
-- **Deliverable:** PCA / UMAP plot  
-- **Completion:** There is a separable trend between the two groups
+**Estimated time:** 2 hours
 
+**Sub-tasks:**
+- Define mask ratio (e.g., 15%)
+- Randomly select bins or peaks to mask
+- Replace masked bins with zeros or a special mask value
+- Record mask positions and reconstruction targets
+- Use BERT method masking
 
+**Deliverable:**
+- A masking function (e.g., `mask_spectrum()`)
+
+**Completion criteria:**
+- Masked spectra preserve original shape
+- Mask positions and targets are correctly aligned
+
+---
+
+### Action 2.2 — Implement self-supervised reconstruction model
+
+**Estimated time:** 3–4 hours
+
+**Sub-tasks:**
+- Define a simple encoder–decoder architecture  
+  (e.g., MLP or lightweight Transformer)
+- Implement forward pass from masked input to reconstructed output
+- Define loss function computed only on masked bins
+
+**Deliverable:**
+- A trainable self-supervised model class
+
+**Completion criteria:**
+- Model can run forward and backward passes
+- Training loss decreases over iterations
+
+---
+
+### Task 2.3 — Self-supervised pretraining
+
+**Estimated time:** 3-4 hours
+
+**Sub-tasks:**
+- Prepare mini-batches of masked spectra
+- Train the model for a small number of epochs
+- Monitor reconstruction loss during training
+
+**Deliverable:**
+- A pretrained encoder capable of generating embeddings
+
+**Completion criteria:**
+- Loss curve shows a convergent trend
+- No runtime or memory errors occur during training
+
+**Total time for Activity 2:** **8–10 hours**
+
+---
+
+## Activity 3: Embedding Evaluation
+
+### Action 3.1 — Extract spectrum-level embeddings
+
+**Estimated time:** 1–2 hours
+
+**Sub-tasks:**
+- Freeze or reuse the pretrained encoder
+- Pass unmasked spectra through the encoder
+- Collect spectrum-level embedding vectors
+
+**Deliverable:**
+- A matrix of spectrum embeddings (`n_spectra × d`)
+
+**Completion criteria:**
+- Each spectrum has a corresponding embedding vector
+- Embedding dimensionality is consistent (e.g., `d = 128`)
+
+---
+
+### Action 3.2 — Aggregate embeddings to sample level
+
+**Estimated time:** 1 hour
+
+**Sub-tasks:**
+- Group spectrum embeddings by raw file (sample)
+- Apply mean pooling as the primary aggregation method
+- Optionally compare with median pooling
+
+**Deliverable:**
+- One sample-level embedding per raw file
+
+**Completion criteria:**
+- Exactly one embedding for cirrhosis and one for HCC
+- Aggregation method is deterministic and reproducible
+
+---
+
+### Action 3.3 — Visual embedding evaluation
+
+**Estimated time:** 1–2 hours
+
+**Sub-tasks:**
+- Apply PCA or UMAP to sample-level embeddings
+- Generate a 2D visualization
+- Label points by disease status
+
+**Deliverable:**
+- PCA or UMAP plot comparing HCC and cirrhosis embeddings
+
+**Completion criteria:**
+- Plot is generated without errors
+- A separable or distinguishable trend is observable between the two groups
+
+**Total time for Activity 3:** **~3–5 hours**
+
+---
+
+## Overall Time Estimate
+
+| Activity | Estimated Time |
+|--------|----------------|
+| Activity 1: MGF Data Analysis | 4–5 hours |
+| Activity 2: Masked Self-Supervised Model | 8–10 hours |
+| Activity 3: Embedding Evaluation | 3–5 hours |
+| **Total** | **~15–20 hours** |

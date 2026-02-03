@@ -22,13 +22,13 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 - File: `*.mgf`
 - Format: plain text file containing multiple blocks:
 
-
+```text
 BEGIN IONS
 m/z intensity
 m/z intensity
 ...
 END IONS
-Output
+Output```
 
 A list of spectrum objects (one per BEGIN IONS ... END IONS block)
 

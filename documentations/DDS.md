@@ -14,6 +14,8 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 
 ### Module 1 — Read the MGF file
 
+Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in-memory spectrum object containing metadata and peak lists.
+
 **Input**
 
 - File: `*.mgf`
@@ -42,6 +44,8 @@ Spectrum = {
 
 ### Module 2 — Extract the (m/z, intensity) pairs from each spectrum
 
+Process raw peak lists from spectrum objects and produce cleaned numeric representations suitable for downstream preprocessing and binning.
+
 **Input**
 
 - One Spectrum object from Step 1
@@ -67,6 +71,8 @@ Spectrum = {
 
 ### Module 3 — Discretize / tokenize the spectrum (m/z binning)
 
+Convert variable-length peak lists into fixed-length vector representations by discretizing the m/z axis into bins and aggregating intensities.
+
 **Input**
 
 - peaks: Array[N, 2]
@@ -83,7 +89,7 @@ Spectrum = {
 
 ### Module 4 — masked self-supervised learning
 
-Masking is applied only during self-supervised pretraining. During downstream inference and classification, no masking is applied.
+Masking is applied only during self-supervised pretraining. During downstream inference and classification, no masking is applied. This module defines the masking strategy and prepares masked inputs and reconstruction targets for self-supervised representation learning.
 
 **Input**
 
@@ -101,7 +107,7 @@ Masking is applied only during self-supervised pretraining. During downstream in
 
 
 ### Module 5 — Train the model to predict masked peaks
-This training step is fully self-supervised and does not use disease labels (HCC vs cirrhosis).
+This training step is fully self-supervised and does not use disease labels (HCC vs cirrhosis). The goal of this module is to train an encoder to learn general spectral representations by reconstructing masked spectral information.
 
 **Model input**
 
@@ -119,7 +125,7 @@ This training step is fully self-supervised and does not use disease labels (HCC
 
 
 ### Module 6 — Extract spectrum-level embeddings
-After self-supervised pretraining, the pretrained encoder is used to extract spectrum-level embeddings.
+After self-supervised pretraining, the pretrained encoder is used to extract spectrum-level embeddings. This module applies the frozen or fine-tuned encoder to unmasked spectra to generate fixed-dimensional embedding vectors for downstream analysis.
 
 **Input**
 
@@ -134,6 +140,9 @@ After self-supervised pretraining, the pretrained encoder is used to extract spe
 ### Downstream Tasks
 
 ### Module 7 — Aggregate spectrum-level embeddings to sample-level
+
+Aggregate multiple spectrum-level embeddings derived from the same raw file into a single sample-level embedding representing the entire biological sample.
+
 **Input**
 
 - A set of embeddings from one raw file: (Each embedding corresponds to one MS/MS spectrum from the same sample.)
@@ -164,7 +173,7 @@ Due to limited computational resources:
 This setup is sufficient for validating the proposed pipeline.
 
 ### Module 8 — Train a classifier on sample-level embeddings
-This step is a downstream supervised task that uses the learned sample-level embeddings as fixed representations.
+This step is a downstream supervised task that uses the learned sample-level embeddings as fixed representations. The classifier serves as an evaluation layer to assess whether the learned embeddings capture disease-relevant information.
 
 **Input**
 - Sample-level embeddings and corresponding labels:

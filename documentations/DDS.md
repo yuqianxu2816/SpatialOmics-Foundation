@@ -34,8 +34,8 @@ Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in
 
 - spectra: List[Spectrum]
 - Spectrum = {
--  "meta": Dict[str, Any],      # e.g., {"PEPMASS": 512.34, "CHARGE": 2, "RTINSECONDS": 1234.5}
--   peaks": List[Tuple[float, float]]  # [(mz1, inten1), (mz2, inten2), ...]
+  - "meta": Dict[str, Any],      # e.g., {"PEPMASS": 512.34, "CHARGE": 2, "RTINSECONDS": 1234.5}
+  - peaks": List[Tuple[float, float]]  # [(mz1, inten1), (mz2, inten2), ...]
 - }  
 ### Module 2 — Extract the (m/z, intensity) pairs from each spectrum
 

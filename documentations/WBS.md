@@ -40,7 +40,8 @@ Spectrum = {
   "meta": Dict[str, Any],      # e.g., {"PEPMASS": 512.34, "CHARGE": 2, "RTINSECONDS": 1234.5}
   "peaks": List[Tuple[float, float]]  # [(mz1, inten1), (mz2, inten2), ...]
 }
-Step 2 — Extract the (m/z, intensity) pairs from each spectrum
+
+### Step 2 — Extract the (m/z, intensity) pairs from each spectrum
 Input
 
 Spectrum["peaks"] = List[(mz, intensity)]
@@ -59,8 +60,9 @@ keep top-N peaks
 Output format
 
 peaks: Array[N, 2]
-# column 0 = m/z, column 1 = intensity
-Step 3 — Discretize / tokenize the spectrum (m/z binning)
+ column 0 = m/z, column 1 = intensity
+
+### Step 3 — Discretize / tokenize the spectrum (m/z binning)
 Input
 
 peaks: Array[N, 2]
@@ -73,8 +75,9 @@ bin_width (e.g., 1.0 or 0.1 Da)
 Output
 
 x: Vector[B]
-# aggregated (sum or max) and often normalized intensity per bin
-Step 4 — Randomly mask some peaks
+ aggregated (sum or max) and often normalized intensity per bin
+
+### Step 4 — Randomly mask some peaks
 Input
 
 x: Vector[B]
@@ -95,7 +98,7 @@ masked bins are set to 0 or a special value
 
 targets are meaningful only where mask = 1
 
-Step 5 — Train the model to predict masked peaks
+### Step 5 — Train the model to predict masked peaks
 This is the self-supervised training step.
 
 Model input
@@ -109,13 +112,8 @@ y_pred: Tensor[batch, B]
 loss:   float
 loss computed only on masked positions
 
-Typical objectives
 
-regression on masked intensities: MSE or Huber loss
-
-classification of discrete tokens: cross-entropy
-
-Step 6 — Extract spectrum-level embeddings
+### Step 6 — Extract spectrum-level embeddings
 After training (or during inference):
 
 Input
@@ -128,7 +126,8 @@ spectrum_embedding: Vector[d]
 fixed-dimensional embedding (e.g., d = 128)
 
 Downstream Tasks
-Step 7 — Aggregate spectrum-level embeddings to sample-level
+
+### Step 7 — Aggregate spectrum-level embeddings to sample-level
 Input
 
 A set of embeddings from one raw file:
@@ -156,7 +155,7 @@ Due to limited computational resources:
 
 This setup is sufficient for validating the proposed pipeline.
 
-Step 8 — Train a classifier on sample-level embeddings
+### Step 8 — Train a classifier on sample-level embeddings
 Input
 
 X in R^{2 x d},  y = [0, 1]

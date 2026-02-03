@@ -5,8 +5,8 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 ### Example
 
 - Input: one MS/MS spectrum (m/z–intensity list)
-- Output: embedding in R^d (e.g., d = 128)
-
+- Intermediate output: embedding ∈ R^d (e.g., d = 128)
+- Final output: predicted disease label ∈ {cirrhosis, HCC}
 ---
 
 ## Calculation Steps

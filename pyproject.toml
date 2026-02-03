@@ -1,0 +1,20 @@
+[project]
+name = "spatialomics-foundation"
+version = "0.1.0"
+description = "Self-supervised foundation model for spatial omics and mass spectrometry"
+authors = [
+    { name = "Yuqian Xu" }
+]
+readme = "README.md"
+requires-python = ">=3.9"
+
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "matplotlib",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

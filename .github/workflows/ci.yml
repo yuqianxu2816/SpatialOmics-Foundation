@@ -23,4 +23,4 @@ jobs:
 
       - name: Build check
         run: |
-          python -m py_compile data_io.py
+          python -m py_compile SpatialOmics-Foundation/data_io.py

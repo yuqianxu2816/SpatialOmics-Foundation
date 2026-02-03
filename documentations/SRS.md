@@ -2,9 +2,9 @@
 
 ## 1. Overview
 
-This project aims to develop a deep learning method for mass spectrometry representation based on self-supervised masked learning, utilizing serum mass spectrometry data from hepatocellular carcinoma (HCC) and cirrhosis.
+This project aims to develop a deep learning method for mass spectrometry representation based on self-supervised masked learning, utilizing serum mass spectrometry data from hepatocellular carcinoma (HCC) and cirrhosis. The learned representations are used to perform a binary disease classification task (HCC vs. cirrhosis) based on sample-level embeddings.
 
-Unlike traditional supervised machine learning approaches that rely on manual feature engineering and explicit labels (e.g., HCC vs. cirrhosis), this project first learns general-purpose representations (spectral embeddings) of MS/MS spectra through self-supervision. These representations are then applied to downstream disease differentiation tasks, with the goal of exploring whether more robust and transferable representations can be obtained from small-sample, highly heterogeneous glycoproteomics data.
+Unlike traditional supervised machine learning approaches that rely on manual feature engineering and explicit labels (e.g., HCC vs. cirrhosis), this project first learns general-purpose representations (spectral embeddings) of MS/MS spectra through self-supervision. These representations are then applied to downstream disease differentiation tasks, with the goal of exploring whether more robust and transferable representations can be obtained from small-sample, highly heterogeneous glycoproteomics data. 
 
 ---
 

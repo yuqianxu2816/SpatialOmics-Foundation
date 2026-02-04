@@ -215,6 +215,7 @@ Serialize extracted MS2 spectra into MGF format for model input.
 
 ## Activity 3: Embedding Evaluation
 
+**Libraries**
 - `torch`
   - Extract spectrum-level embeddings from the pretrained encoder
 - `numpy`

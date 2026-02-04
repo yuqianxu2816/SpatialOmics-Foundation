@@ -39,7 +39,7 @@ Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in
 - }  
 ### Module 2 — Extract the (m/z, intensity) pairs from each spectrum
 
-Process raw peak lists from spectrum objects and produce cleaned numeric representations suitable for downstream preprocessing and binning.
+Filter raw peak lists from spectrum objects and produce cleaned numeric representations suitable for downstream preprocessing and binning.
 
 **Input**
 
@@ -51,7 +51,7 @@ Process raw peak lists from spectrum objects and produce cleaned numeric represe
 
 - Numeric peak list (possibly cleaned or filtered)
 
-**Optional filtering**
+**filtering**
 
 - remove zero or negative intensity
 

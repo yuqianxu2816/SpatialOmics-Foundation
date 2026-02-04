@@ -184,6 +184,7 @@ This step is a downstream supervised task that uses the learned sample-level emb
     - 1 = HCC
 
 **Model**
+
 A simple supervised classifier is used, such as:
 - Logistic regression
 - Linear layer + sigmoid

@@ -11,6 +11,8 @@ The remaining `.txt` / `.fasta` files are used for grouping information, validat
 Each of cirrhotic sample and HCC sample contains 5 raw files, each raw file has the size around 2 to 3 GB. For the purpose to test the deep learning method and limitation of computing resource, we only use 1 cirrhotic raw file and 1 HCC raw file.
 
 
+## add more on what the first raw and second mzml file contain!!!
+
 ---
 
 ## Core Input

@@ -36,8 +36,6 @@ Convert vendor-specific `.raw` files into open-format `.mzML` files.
 
 ### Step 2 — Extract MS2 spectra from mzML
 
-### add the libraries going to use!!! 
-
 **Task:**  
 Read `.mzML` files and extract MS/MS (MS2) spectra.
 

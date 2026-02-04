@@ -5,6 +5,15 @@
 **Objective:**  
 Produce MS/MS spectra in MGF format as the first basic computable output for downstream self-supervised learning.
 
+**Tools / Libraries**
+- ProteoWizard (`msconvert`)
+  - Vendor-independent tool for converting `.raw` files to open formats
+  - Used for `.raw` → `.mzML` conversion
+- `pyteomics.mzml`
+  - Read mzML files and iterate over spectra and filter MS2 scans (`ms level = 2`)
+- `pyteomics.mgf`
+  - Serialize MS/MS spectra into MGF format and write `BEGIN IONS … END IONS` blocks
+
 ---
 
 ### Step 1 — Convert raw LC-MS/MS files to mzML
@@ -77,6 +86,16 @@ Serialize extracted MS2 spectra into MGF format for model input.
 
 ## Activity 1: MGF Data Inspection and Validation
 
+**Libraries**
+- `numpy`
+  - Implement masking strategies
+  - Prepare binned spectral representations
+- `pyteomics.mgf`
+  - Iterate over MS/MS spectrum blocks
+- `numpy`
+  - Validate numeric peak values
+  - Compute basic spectrum statistics
+
 ### Action 1.1 — Load and validate generated MGF files
 
 **Estimated time:** 2 hours
@@ -126,6 +145,16 @@ Serialize extracted MS2 spectra into MGF format for model input.
 ---
 
 ## Activity 2: Masked Self-Supervised Model
+
+**Libraries**
+- `torch` (PyTorch)
+  - Define encoder–decoder model
+  - Implement forward and backward passes
+  - Perform self-supervised training
+- `torch.nn`
+  - Build neural network modules
+- `torch.optim`
+  - Optimize model parameters
 
 ### Action 2.1 — Implement random peak masking strategy
 
@@ -187,6 +216,17 @@ Serialize extracted MS2 spectra into MGF format for model input.
 ---
 
 ## Activity 3: Embedding Evaluation
+
+- `torch`
+  - Extract spectrum-level embeddings from the pretrained encoder
+- `numpy`
+  - Aggregate embeddings (mean / median pooling)
+- `scikit-learn`
+  - Perform PCA (`sklearn.decomposition.PCA`)
+- `umap-learn` (optional)
+  - Perform UMAP dimensionality reduction
+- `matplotlib` / `seaborn`
+  - Generate embedding visualization plots
 
 ### Action 3.1 — Extract spectrum-level embeddings
 

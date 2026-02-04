@@ -93,7 +93,7 @@ Masking is applied only during self-supervised pretraining. During downstream in
 - Binned vector x: Vector[B]
 - mask_ratio (e.g., 0.15)
 
-- Mask strategies
+**Mask strategies**
   - random bins
   - structured masking (contiguous ranges)
 

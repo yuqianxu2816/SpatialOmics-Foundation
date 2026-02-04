@@ -16,6 +16,8 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 
 Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in-memory spectrum object containing metadata and peak lists.
 
+## describe how the parser works.
+
 **Input**
 
 - File: `*.mgf`

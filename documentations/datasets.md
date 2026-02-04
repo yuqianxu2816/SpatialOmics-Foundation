@@ -36,9 +36,18 @@ Each of cirrhotic sample and HCC sample contains 5 raw files, each raw file has 
 - 09062023_Mehta_GR10000524_DDRC_Sample9_0206_HCC.raw  
 - 09062023_Mehta_GR10000524_DDRC_Sample10_0543_HCC.raw  
 
+**Description**
+- Raw LC-MS/MS data files generated directly by the mass spectrometer
+- Contain the complete acquisition output of an LC-MS/MS run
+
+**Content**
+- Full MS1 scans (precursor ion spectra)
+- MS/MS (MS2) scans acquired at specific retention times
+- Instrument metadata, including:
+  - Scan numbers and scan types
+  - Retention time for each scan
 
 #### Biological Implications
-
 - LC-MS/MS data from serum sources  
 - Two groups:
   - **cirrhotic** (control)  
@@ -50,17 +59,22 @@ Each of cirrhotic sample and HCC sample contains 5 raw files, each raw file has 
 ### 2. `.mzML` (Intermediate Format)
 
 **Conversion:**
+.raw → .mzML using MSConvert
 
-.raw → .mzML
-
+**Content**
+- Complete MS1 and MS2 spectra
+- For each spectrum:
+  - m/z array
+  - intensity array
+  - retention time
+  - precursor information (for MS2 scans)
+- Explicit separation of MS1 and MS2 scans
 
 **Role:**
-
 - Open format  
 - Retains complete MS1 / MS2 information  
 
 **Role in project:**
-
 - Intermediate conversion format  
 - Optional input (if you prefer to read directly from mzML)  
 
@@ -69,22 +83,15 @@ Each of cirrhotic sample and HCC sample contains 5 raw files, each raw file has 
 
 ### 3. `.mgf` (Direct Input for the Self-supervised Model)
 
-BEGIN IONS
-
-PEMASS=...
-
-CHARGE=...
-
-RTINSECONDS=...
-
-m/z intensity
-
-m/z intensity
-
-...
-
-END IONS
-
+**Content Format**
+- BEGIN IONS
+- PEMASS=...
+- CHARGE=...
+- RTINSECONDS=...
+- m/z intensity
+- m/z intensity
+- ...
+- END IONS
 
 In this project, the input to the self-supervised model is MS/MS spectra in MGF format, with each `BEGIN IONS … END IONS` block considered as a training sample.
 

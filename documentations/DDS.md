@@ -16,8 +16,6 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 
 Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in-memory spectrum object containing metadata and peak lists.
 
-## describe how the parser works.
-
 **Input**
 
 - File: `*.mgf`
@@ -27,6 +25,12 @@ Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in
   - m/z intensity
   - ...
   - END IONS
+ 
+**Parsing procedure**
+- Read the MGF file line by line
+- Detect spectrum boundaries using `BEGIN IONS` and `END IONS`
+- Parse peak lines into numeric `(m/z, intensity)` pairs
+- Store metadata and peaks in a standardized spectrum object
 
 **Output**
 
@@ -44,25 +48,18 @@ Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in
 Filter raw peak lists from spectrum objects and produce cleaned numeric representations suitable for downstream preprocessing and binning.
 
 **Input**
-
 - One Spectrum object from Step 1
-
 - Spectrum["peaks"] = List[(mz, intensity)]
 
-**Output**
-
-- Numeric peak list (possibly cleaned or filtered)
-
-**filtering**
-
+**Filtering**
 - remove zero or negative intensity
-
 - restrict m/z range
-
 - keep top-N peaks
 
-**Output format**
+**Output**
+- Numeric peak list (possibly cleaned or filtered)
 
+**Output format**
 - peaks: Array[N, 2]
  - column 0 = m/z, column 1 = intensity
 
@@ -76,7 +73,10 @@ Convert variable-length peak lists into fixed-length vector representations by d
 - Binning parameters:
   - mz_min, mz_max (e.g., 100–2000)
   - bin_width (e.g., 1.0 or 0.1 Da)
-
+  
+**Binning procedure**
+- Map variable-length peak lists to fixed-length vectors by m/z binning and intensity aggregation
+  
 **Output**
 - A fixed-length intensity vector x of length B (number of bins)
   
@@ -94,23 +94,28 @@ Masking is applied only during self-supervised pretraining. During downstream in
 - mask_ratio (e.g., 0.15)
 
 **Mask strategies**
-  - random bins
-  - structured masking (contiguous ranges)
-
+- random bins, where individual bins are independently selected for masking
+- structured masking (contiguous ranges), where adjacent m/z bins are masked together to simulate missing spectral regions
+  
 **Output**
 - x_masked: Vector[B] (masked input)
 - mask: Vector[B] (binary indicator: 1 = masked bin)
 - targets: Vector[B] (ground truth values for masked bins only)
 
 
-### Module 5 — Train the model to predict masked peaks
+### Module 5 — Train the model to predict masked peaks (most important module)
 This training step is fully self-supervised and does not use disease labels (HCC vs cirrhosis). The goal of this module is to train an encoder to learn general spectral representations by reconstructing masked spectral information.
 
 **Model input**
-
 - x_masked (or masked token sequence): Tensor[batch, B]
 - mask (to compute loss only on masked locations): Tensor[batch, B]
 - targets: Tensor[batch, B]
+
+**Training procedure**
+- Feed masked spectral representations into the encoder–decoder model
+- Predict the original intensities at masked positions
+- Compute reconstruction loss only on masked bins
+- Update model parameters to learn general spectral representations without using disease labels
   
 **Model output (training)**
 - y_pred: reconstructed intensities (or token logits) over the full vector/sequence
@@ -125,12 +130,14 @@ This training step is fully self-supervised and does not use disease labels (HCC
 After self-supervised pretraining, the pretrained encoder is used to extract spectrum-level embeddings. This module applies the frozen or fine-tuned encoder to unmasked spectra to generate fixed-dimensional embedding vectors for downstream analysis.
 
 **Input**
-
 - unmasked or lightly masked spectrum representation (x or tokenized form)
   - x: Vector[B] or (token_ids, token_values, attention_mask)
 
-**Output**
+**Embedding extraction procedure**
+- Apply the pretrained encoder to unmasked spectra
+- Extract fixed-dimensional spectrum-level embeddings
 
+**Output**
 - A spectrum embedding vector:
   - embedding ∈ R^d (e.g., d = 128)
 
@@ -141,20 +148,18 @@ After self-supervised pretraining, the pretrained encoder is used to extract spe
 Aggregate multiple spectrum-level embeddings derived from the same raw file into a single sample-level embedding representing the entire biological sample.
 
 **Input**
-
 - A set of embeddings from one raw file: (Each embedding corresponds to one MS/MS spectrum from the same sample.)
   - E = {e1, e2, ..., en},  ei ∈ R^d
+
+**Aggregation methods**
+- Mean pooling (used in this project)
+- Median pooling
+- Attention-based pooling (optional)
 
 **Output**
 - A single sample-level embedding:
   - z ∈ R^d
-**Aggregation methods**
 
-- Mean pooling (used in this project)
-
-- Median pooling
-
-- Attention-based pooling (optional)
   
 **Output format**
 - sample_embedding: Vector[d]
@@ -181,15 +186,11 @@ This step is a downstream supervised task that uses the learned sample-level emb
 **Model**
 
 A simple supervised classifier is used, such as:
-
 - Logistic regression
-
 - Linear layer + sigmoid
-
 - Linear SVM
 
 **Output**
-
 - y_hat ∈ {0, 1} or P(HCC | sample)
 
 

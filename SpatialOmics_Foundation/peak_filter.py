@@ -37,7 +37,7 @@ def set_mz_range(min_mz: Optional[float] = None, max_mz: Optional[float] = None)
         if hi < lo:
             lo, hi = hi, lo
 
-        keep = (mz >= lo) & (mz <= hi)   # ✅ inclusive
+        keep = (mz >= lo) & (mz <= hi)   # inclusive
         return p[keep]
 
     return _fn
@@ -62,7 +62,7 @@ def remove_precursor_peak(tol: float, unit: Unit = "Da") -> Callable[[np.ndarray
             return p
 
         if precursor_mz is None or (isinstance(precursor_mz, float) and np.isnan(precursor_mz)):
-            return p  # ✅ branch: no precursor info
+            return p  # branch: no precursor info
 
         precursor_mz = float(precursor_mz)
         mz = p[:, 0]
@@ -98,7 +98,7 @@ def scale_intensity(
             return p
 
         inten = p[:, 1].astype(float)
-        # 你DDS的基础 filter：remove zero/negative intensity（这里先裁到>=0，真正丢弃交给 filter_intensity）
+        # Your DDS base filter: remove zero/negative intensity (here clip to >=0, actual removal done by filter_intensity)
         inten = np.maximum(inten, 0.0)
 
         # scale relative to most intense peak (optional)
@@ -159,16 +159,16 @@ def filter_intensity(min_intensity: float = 0.0, max_peaks: Optional[int] = None
         if p.shape[0] == 0:
             return p
 
-        # ✅ DDS base filter: remove zero/negative
+        # DDS base filter: remove zero/negative
         p = p[p[:, 1] > 0.0]
         if p.shape[0] == 0:
             return p
 
         inten = p[:, 1]
         mx = float(np.max(inten))
-        thr = float(min_intensity) * mx  # ✅ spectrum-style relative threshold
+        thr = float(min_intensity) * mx  # spectrum-style relative threshold
 
-        # spectrum里是 “<= thr 的都当 noise 丢掉”
+        # In spectrum, peaks with intensity <= thr are considered noise and removed
         p = p[inten > thr]
         if p.shape[0] == 0:
             return p
@@ -177,7 +177,7 @@ def filter_intensity(min_intensity: float = 0.0, max_peaks: Optional[int] = None
             idx = np.argsort(p[:, 1])[::-1][: int(max_peaks)]
             p = p[idx]
 
-        # 稳定性：按mz排序
+        # Stability: sort by mz
         p = p[np.argsort(p[:, 0])]
         return p
 
@@ -225,7 +225,7 @@ def apply_preprocessing_pipeline(
         if x is None:
             return None
 
-        # 支持 remove_precursor_peak 这种需要 precursor_mz 的函数
+        # Support functions like remove_precursor_peak that require precursor_mz
         try:
             x = fn(x, precursor_mz)  # type: ignore[misc]
         except TypeError:
@@ -235,20 +235,18 @@ def apply_preprocessing_pipeline(
 
 
 
-
-# ====== Script-only runner (no argparse) ======
 import os
 import numpy as np
 from .mgf_parse import load_spectra_npz, save_spectra_npz
 
-# ✅ 改成你实际输出位置
+# ✅ Change to your actual output location
 IN_NPZ  = "output/spectra_raw.npz"
 OUT_NPZ = "output/spectra_filtered.npz"
 
-# ✅ 你的 filter 参数
+# ✅ Your filter parameters
 MIN_MZ = 100.0
 MAX_MZ = 2000.0
-MIN_INTENSITY = 1e-12     # 等价于 “>0”
+MIN_INTENSITY = 1e-12     # Equivalent to ">0"
 MAX_PEAKS = 200
 MIN_PEAKS = 5
 REMOVE_PRECURSOR_TOL = 1.5
@@ -259,7 +257,7 @@ def main():
     spectra = load_spectra_npz(IN_NPZ)
     print(f"[peak_filter] loaded spectra: {len(spectra)} from {IN_NPZ}")
 
-    # 输出前100行到txt文件
+    # Output the first 100 lines to a txt file
     out_txt = "output/spectra_first100.txt"
     os.makedirs(os.path.dirname(out_txt) or ".", exist_ok=True)
     with open(out_txt, "w", encoding="utf-8") as f:
@@ -269,7 +267,7 @@ def main():
     print(f"[peak_filter] wrote first 100 spectra to {out_txt}")
 
 
-    # 自动统计参数
+    # Automatically calculate parameters
     all_mz = np.concatenate([np.array(sp["peaks"], dtype=float)[:,0] for sp in spectra if len(sp["peaks"]) > 0])
     all_intensity = np.concatenate([np.array(sp["peaks"], dtype=float)[:,1] for sp in spectra if len(sp["peaks"]) > 0])
     peak_counts = np.array([len(sp["peaks"]) for sp in spectra])
@@ -277,15 +275,16 @@ def main():
     MIN_MZ = float(np.min(all_mz))
     MAX_MZ = float(np.max(all_mz))
     # MIN_INTENSITY = float(np.min(all_intensity[all_intensity > 0])) if np.any(all_intensity > 0) else 1e-12
-    MIN_INTENSITY = 0.01   # 保留强度 > 1% of max peak 的峰
+    MIN_INTENSITY = 0.01   # Retain peaks with intensity > 1% of max peak
     """
-    但如果 filter_intensity 变成 spectrum-style（比例阈值），那 MIN_INTENSITY = min_positive_intensity 
-    就完全不对了（比如最小正强度可能是 12.7，这意味着阈值 = 12.7 * max_intensity，直接把所有峰都删光
+    However, if filter_intensity becomes spectrum-style (proportional threshold), then MIN_INTENSITY = min_positive_intensity 
+    becomes completely incorrect (for example, the minimum positive intensity may be 12.7, which means the threshold = 12.7 * max_intensity,
+    effectively deleting all peaks    
     """
     MAX_PEAKS = int(np.median(peak_counts))
     MIN_PEAKS = int(np.min(peak_counts))
-    REMOVE_PRECURSOR_TOL = 1.5  # 仍用默认
-    PRECURSOR_UNIT = "Da"       # 仍用默认
+    REMOVE_PRECURSOR_TOL = 1.5  # Still use the default
+    PRECURSOR_UNIT = "Da"       # Still use the default
 
     print(f"[peak_filter] auto params: MIN_MZ={MIN_MZ}, MAX_MZ={MAX_MZ}, MIN_INTENSITY={MIN_INTENSITY}, MAX_PEAKS={MAX_PEAKS}, MIN_PEAKS={MIN_PEAKS}")
 
@@ -310,7 +309,7 @@ def main():
             dropped += 1
             continue
 
-        # 保存回同一种 Spectrum 格式（后续 binning / SSL 最好接）
+        # Save back to the same Spectrum format (preferably followed by binning/SSL)
         sp2 = {
             "meta": sp["meta"],
             "peaks": list(map(tuple, out.tolist())),  # list[(mz,inten)]
@@ -320,7 +319,7 @@ def main():
 
     print(f"[peak_filter] kept={len(filtered)} dropped={dropped}")
 
-    # 输出前100个filter后的谱图到txt
+    # Output the spectrograms after the first 100 filters to a txt file
     out_txt2 = "output/spectra_filtered_first100.txt"
     os.makedirs(os.path.dirname(out_txt2) or ".", exist_ok=True)
     with open(out_txt2, "w", encoding="utf-8") as f:

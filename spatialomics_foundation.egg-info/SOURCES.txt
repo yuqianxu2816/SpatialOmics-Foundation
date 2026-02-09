@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+spatialomics_foundation.egg-info/PKG-INFO
+spatialomics_foundation.egg-info/SOURCES.txt
+spatialomics_foundation.egg-info/dependency_links.txt
+spatialomics_foundation.egg-info/requires.txt
+spatialomics_foundation.egg-info/top_level.txt

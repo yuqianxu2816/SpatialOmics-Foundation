@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: spatialomics-foundation
+Version: 0.1.0
+Summary: Self-supervised foundation model for spatial omics and mass spectrometry
+Author: Yuqian Xu
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+
+# SpatialOmics-Foundation
+
+Goal:
+
+Single-cell and spatial MS, through MSI, mass cytometry, and nanoPOTS, advances T1D research from "average molecular changes" to "spatial and cellular-level molecular heterogeneity," enabling the first direct analysis of the islet microenvironment, immune cell infiltration pathways, and β-cell-specific molecular imbalances at the tissue scale.
+
+Note: for all the md documents except DDS.md, I used AI to format the documents such as organizing bullet points.

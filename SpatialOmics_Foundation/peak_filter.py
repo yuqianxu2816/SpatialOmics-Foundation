@@ -5,7 +5,7 @@ from typing import Callable, Optional, Literal
 import numpy as np
 
 Unit = Literal["Da", "ppm"]
-ScaleMethod = Optional[Literal["root", "log", "rank", "none"]]  # 对齐 spectrum: root/log/rank/None
+ScaleMethod = Optional[Literal["root", "log", "rank", "none"]]  # Align spectrum: root/log/rank/None
 
 
 def _to_array(peaks) -> np.ndarray:

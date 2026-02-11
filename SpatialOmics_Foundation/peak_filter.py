@@ -83,7 +83,7 @@ def scale_intensity(
     max_rank: Optional[int] = None,
 ) -> Callable[[np.ndarray], np.ndarray]:
     """
-    Align with spectrum(1).py:
+    Align with spectrum.py:
     - scaling: None/'none' (no transform), 'root', 'log', 'rank'
     - root: intensity := intensity ** (1/degree)
     - log:  intensity := log_base(intensity + 1)
@@ -146,7 +146,7 @@ def scale_intensity(
 
 def filter_intensity(min_intensity: float = 0.0, max_peaks: Optional[int] = None) -> Callable[[np.ndarray], np.ndarray]:
     """
-    Align with spectrum(1).py:
+    Align with spectrum.py:
     - min_intensity is interpreted as a FRACTION of the most intense peak (0..1).
       Peaks with intensity <= (min_intensity * max_intensity_in_spectrum) are removed.
     - keep at most max_peaks most intense peaks.
@@ -239,18 +239,17 @@ import os
 import numpy as np
 from .mgf_parse import load_spectra_npz, save_spectra_npz
 
-# ✅ Change to your actual output location
 IN_NPZ  = "output/spectra_raw.npz"
 OUT_NPZ = "output/spectra_filtered.npz"
 
-# ✅ Your filter parameters
+
 MIN_MZ = 100.0
 MAX_MZ = 2000.0
-MIN_INTENSITY = 1e-12     # Equivalent to ">0"
+MIN_INTENSITY = 1e-12    
 MAX_PEAKS = 200
 MIN_PEAKS = 5
 REMOVE_PRECURSOR_TOL = 1.5
-PRECURSOR_UNIT = "Da"     # "Da" or "ppm"
+PRECURSOR_UNIT = "Da"  
 
 def main():
 

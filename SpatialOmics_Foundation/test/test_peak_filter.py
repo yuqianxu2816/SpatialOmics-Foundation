@@ -32,7 +32,7 @@ def test_set_mz_range_noop_and_swap_and_infer():
     assert out2.shape[0] == 1
     assert out2[0, 0] == 200.0
 
-    # inclusive 边界：:contentReference[oaicite:8]{index=8}
+    # inclusive range：:contentReference[oaicite:8]{index=8}
     fn3 = pf.set_mz_range(100.0, 200.0)
     out3 = fn3(peaks)
     assert out3.shape[0] == 2

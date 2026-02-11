@@ -50,8 +50,6 @@ def remove_precursor_peak(tol: float, unit: Unit = "Da") -> Callable[[np.ndarray
     - unit="ppm": |mz - precursor| <= precursor * tol * 1e-6
 
     If precursor_mz is missing -> no-op (branch coverage).
-    NOTE: This is the "single-precursor-mz" version; spectrum(1).py has a
-    charge-aware multi-charge/isotope removal, which requires CHARGE.
     """
     if unit not in ("Da", "ppm"):
         raise ValueError("unit must be 'Da' or 'ppm'")
@@ -83,14 +81,8 @@ def scale_intensity(
     max_rank: Optional[int] = None,
 ) -> Callable[[np.ndarray], np.ndarray]:
     """
-    Align with spectrum.py:
-    - scaling: None/'none' (no transform), 'root', 'log', 'rank'
-    - root: intensity := intensity ** (1/degree)
-    - log:  intensity := log_base(intensity + 1)
-    - rank: replace intensity by rank (max_rank for highest intensity)
-
-    Optionally scale intensities relative to max_intensity (if provided):
-    intensity := intensity / max_peak * max_intensity
+    Scale peak intensities using various methods: root, log, or rank transformation.
+    Optionally normalize intensities relative to the most intense peak to a specified maximum value.
     """
     def _fn(peaks: np.ndarray) -> np.ndarray:
         p = _to_array(peaks).copy()
@@ -98,7 +90,7 @@ def scale_intensity(
             return p
 
         inten = p[:, 1].astype(float)
-        # Your DDS base filter: remove zero/negative intensity (here clip to >=0, actual removal done by filter_intensity)
+        # The DDS base filter: remove zero/negative intensity (here clip to >=0, actual removal done by filter_intensity)
         inten = np.maximum(inten, 0.0)
 
         # scale relative to most intense peak (optional)
@@ -146,13 +138,8 @@ def scale_intensity(
 
 def filter_intensity(min_intensity: float = 0.0, max_peaks: Optional[int] = None) -> Callable[[np.ndarray], np.ndarray]:
     """
-    Align with spectrum.py:
-    - min_intensity is interpreted as a FRACTION of the most intense peak (0..1).
-      Peaks with intensity <= (min_intensity * max_intensity_in_spectrum) are removed.
-    - keep at most max_peaks most intense peaks.
-
-    Also preserves your DDS base filter:
-    - remove zero/negative intensity (<=0)
+    Filter out low-intensity peaks using a relative threshold (min_intensity * max_intensity).
+    Optionally keep only the top max_peaks most intense peaks, then sort by m/z for stability.
     """
     def _fn(peaks: np.ndarray) -> np.ndarray:
         p = _to_array(peaks)
@@ -218,7 +205,6 @@ def apply_preprocessing_pipeline(
 ) -> Optional[np.ndarray]:
     """
     Apply the list of preprocessing functions in order.
-    Some steps may need precursor_mz; we support that here.
     """
     x: Optional[np.ndarray] = peaks
     for fn in pipeline:

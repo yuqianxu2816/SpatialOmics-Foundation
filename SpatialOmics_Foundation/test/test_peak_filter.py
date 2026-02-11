@@ -122,7 +122,7 @@ def test_filter_intensity_threshold_max_peaks_and_sorting():
 def test_discard_low_quality_branch():
     peaks = np.array([[100.0, 1.0], [200.0, 2.0]])
     fn = pf.discard_low_quality(min_peaks=3)
-    assert fn(peaks) is None  # ✅ Discard branch :contentReference[oaicite:20]{index=20}
+    assert fn(peaks) is None  # Discard branch :contentReference[oaicite:20]{index=20}
 
     fn2 = pf.discard_low_quality(min_peaks=2)
     out = fn2(peaks)

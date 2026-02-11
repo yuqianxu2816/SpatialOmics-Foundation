@@ -9,6 +9,8 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 - Final output: predicted disease label ∈ {cirrhosis, HCC}
 ---
 
+### add module 0 and extra filters.
+
 ## Calculation Steps
 
 

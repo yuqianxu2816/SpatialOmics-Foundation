@@ -84,7 +84,7 @@ def test_scale_intensity_none_root_log_rank_and_errors():
     max_rank_idx = np.argmax(out_rank[:, 1])
     assert out_rank[max_rank_idx, 0] == 1.0
 
-    # max_rank < n -> should raise an error
+    # max_rank < n should raise an error
     with pytest.raises(ValueError):
         pf.scale_intensity("rank", max_rank=2)(np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]))
 
@@ -103,7 +103,7 @@ def test_filter_intensity_threshold_max_peaks_and_sorting():
     ])
 
     fn = pf.filter_intensity(min_intensity=0.2, max_peaks=None)
-    # max intensity=10, threshold=2 => keep those >2: 10 and 5
+    # max intensity=10, threshold=2, and we keep those >2: 10 and 5
     out = fn(peaks)
     assert set(out[:, 0].tolist()) == {150.0, 300.0}
 
@@ -132,11 +132,14 @@ def test_discard_low_quality_branch():
 
 def test_scale_to_unit_norm_zero_norm_and_nonzero():
     # All zero intensities -> norm=0 branch: remain unchanged 
+    # L2 norm = srqt(0^2+0^2)=0 -> return original peaks without scaling
     peaks0 = np.array([[100.0, 0.0], [200.0, 0.0]])
     out0 = pf._scale_to_unit_norm(peaks0)
     assert np.all(out0[:, 1] == 0.0)
 
     # Non-zero: L2 norm should be approximately 1
+    # norm = sqrt(3^2+4^2)=5 -> scaled intensities should be 0.6 and 0.8
+    # sqrt(0.6^2+0.8^2)=1 -> unit norm achieved
     peaks = np.array([[100.0, 3.0], [200.0, 4.0]])
     out = pf._scale_to_unit_norm(peaks)
     norm = np.sqrt(np.sum(out[:, 1] ** 2))
@@ -151,6 +154,6 @@ def test_apply_preprocessing_pipeline_typeerror_fallback_branch():
     fn_no_prec = pf.set_mz_range(100.0, 200.0)                   # (peaks)
 
     out = pf.apply_preprocessing_pipeline(peaks, [fn_need_prec, fn_no_prec], precursor_mz=None)
-    # When precursor=None, remove_precursor_peak is a no-op; set_mz_range keeps both peaks
+    # When precursor=None, remove_precursor_peak does nothing; set_mz_range keeps both peaks
     assert out is not None
     assert out.shape[0] == 2

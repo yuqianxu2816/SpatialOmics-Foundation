@@ -21,7 +21,7 @@ def _to_array(peaks) -> np.ndarray:
 
 def set_mz_range(min_mz: Optional[float] = None, max_mz: Optional[float] = None) -> Callable[[np.ndarray], np.ndarray]:
     """
-    Restrict m/z values to [min_mz, max_mz] (inclusive), similar to spectrum(1).py.
+    Restrict m/z values to [min_mz, max_mz] (inclusive).
     - if both None: no-op
     - if one side None: infer from data
     - if max < min: swap

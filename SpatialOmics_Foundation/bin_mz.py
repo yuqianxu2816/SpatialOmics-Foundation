@@ -4,7 +4,7 @@ import torch
 
 def bin_mz(npz_path, bin_size=0.5, mz_min=50.0, mz_max=2500.0, is_normalized=False):
     """
-    DreaMS-style fixed-width binning for spectra_filtered.npz
+    Fixed-width binning for spectra_filtered.npz
     - Uses floor for binning
     - Clamps m/z to [mz_min, mz_max] or [0, 1] if normalized
     - Bins limited to [0, n_bins-1]

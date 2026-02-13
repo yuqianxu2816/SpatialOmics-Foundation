@@ -32,7 +32,7 @@ def test_set_mz_range_noop_and_swap_and_infer():
     assert out2.shape[0] == 1
     assert out2[0, 0] == 200.0
 
-    # inclusive range：:contentReference[oaicite:8]{index=8}
+    # inclusive range:
     fn3 = pf.set_mz_range(100.0, 200.0)
     out3 = fn3(peaks)
     assert out3.shape[0] == 2
@@ -41,7 +41,7 @@ def test_set_mz_range_noop_and_swap_and_infer():
 
 def test_remove_precursor_peak_invalid_unit_raises():
     with pytest.raises(ValueError):
-        pf.remove_precursor_peak(1.0, unit="meter")  # unit branch :contentReference[oaicite:9]{index=9}
+        pf.remove_precursor_peak(1.0, unit="meter")  # unit branch :not in {"Da","ppm"}
 
 
 def test_remove_precursor_peak_branch_no_precursor_and_with_precursor_Da():
@@ -49,11 +49,11 @@ def test_remove_precursor_peak_branch_no_precursor_and_with_precursor_Da():
 
     fn = pf.remove_precursor_peak(tol=0.5, unit="Da")
 
-    # branch: precursor_mz missing -> no-op :contentReference[oaicite:10]{index=10}
+    # branch: precursor_mz missing
     out_no = fn(peaks, precursor_mz=None)
     assert out_no.shape[0] == 3
 
-    # with precursor: |mz-100|<=0.5 will be removed => mz=100
+    # with precursor: |mz-100|<=0.5 will be removed, which mz=100 is removed
     out_yes = fn(peaks, precursor_mz=100.0)
     assert set(out_yes[:, 0].tolist()) == {99.0, 101.0}
 
@@ -61,40 +61,40 @@ def test_remove_precursor_peak_branch_no_precursor_and_with_precursor_Da():
 def test_scale_intensity_none_root_log_rank_and_errors():
     peaks = np.array([[100.0, -1.0], [200.0, 4.0], [300.0, 9.0]])
 
-    # scaling None: Negative values will be clipped to 0 (but not discarded) :contentReference[oaicite:11]{index=11}
+    # scaling None: Negative values will be clipped to 0 (but not discarded)
     fn_none = pf.scale_intensity(None)
     out_none = fn_none(peaks)
     assert out_none[0, 1] == 0.0
 
-    # root: sqrt(4)=2, sqrt(9)=3 :contentReference[oaicite:12]{index=12}
+    # root: sqrt(4)=2, sqrt(9)=3
     fn_root = pf.scale_intensity("root", degree=2)
     out_root = fn_root(peaks)
     assert abs(out_root[1, 1] - 2.0) < 1e-9
     assert abs(out_root[2, 1] - 3.0) < 1e-9
 
-    # log: log2(inten+1) :contentReference[oaicite:13]{index=13}
+    # log: log2(inten+1)
     fn_log = pf.scale_intensity("log", base=2)
     out_log = fn_log(np.array([[100.0, 3.0]]))
     assert abs(out_log[0, 1] - 2.0) < 1e-9  # log2(4)=2
 
-    # rank: The one with the highest intensity has the highest rank :contentReference[oaicite:14]{index=14}
+    # rank: The one with the highest intensity has the highest rank
     fn_rank = pf.scale_intensity("rank")
     out_rank = fn_rank(np.array([[1.0, 10.0], [2.0, 1.0], [3.0, 5.0]]))
     # The peak with intensity=10 should have the highest rank
     max_rank_idx = np.argmax(out_rank[:, 1])
     assert out_rank[max_rank_idx, 0] == 1.0
 
-    # max_rank < n -> should raise an error :contentReference[oaicite:15]{index=15}
+    # max_rank < n -> should raise an error
     with pytest.raises(ValueError):
         pf.scale_intensity("rank", max_rank=2)(np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]))
 
-    # unsupported scaling -> should raise an error :contentReference[oaicite:16]{index=16}
+    # unsupported scaling -> should raise an error
     with pytest.raises(ValueError):
         pf.scale_intensity("weird")(peaks)
 
 
 def test_filter_intensity_threshold_max_peaks_and_sorting():
-    # Intensities with <=0 will be discarded first :contentReference[oaicite:17]{index=17}
+    # Intensities with <=0 will be discarded first 
     peaks = np.array([
         [300.0, 10.0],
         [100.0, 0.0],
@@ -107,13 +107,13 @@ def test_filter_intensity_threshold_max_peaks_and_sorting():
     out = fn(peaks)
     assert set(out[:, 0].tolist()) == {150.0, 300.0}
 
-    # max_peaks truncation branch :contentReference[oaicite:18]{index=18}
+    # max_peaks truncation branch
     fn2 = pf.filter_intensity(min_intensity=0.0, max_peaks=1)
     out2 = fn2(peaks)
     assert out2.shape[0] == 1
     assert out2[0, 1] == 10.0  # The strongest peak
 
-    # Result stability: sorted by mz :contentReference[oaicite:19]{index=19}
+    # Result stability: sorted by mz
     fn3 = pf.filter_intensity(min_intensity=0.0, max_peaks=None)
     out3 = fn3(peaks)
     assert np.all(out3[:, 0] == np.sort(out3[:, 0]))
@@ -122,7 +122,7 @@ def test_filter_intensity_threshold_max_peaks_and_sorting():
 def test_discard_low_quality_branch():
     peaks = np.array([[100.0, 1.0], [200.0, 2.0]])
     fn = pf.discard_low_quality(min_peaks=3)
-    assert fn(peaks) is None  # Discard branch :contentReference[oaicite:20]{index=20}
+    assert fn(peaks) is None  # Discard branch 
 
     fn2 = pf.discard_low_quality(min_peaks=2)
     out = fn2(peaks)
@@ -131,7 +131,7 @@ def test_discard_low_quality_branch():
 
 
 def test_scale_to_unit_norm_zero_norm_and_nonzero():
-    # All zero intensities -> norm=0 branch: remain unchanged :contentReference[oaicite:21]{index=21}
+    # All zero intensities -> norm=0 branch: remain unchanged 
     peaks0 = np.array([[100.0, 0.0], [200.0, 0.0]])
     out0 = pf._scale_to_unit_norm(peaks0)
     assert np.all(out0[:, 1] == 0.0)

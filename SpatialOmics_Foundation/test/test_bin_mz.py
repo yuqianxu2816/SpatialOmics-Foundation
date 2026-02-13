@@ -16,7 +16,7 @@ def _make_npz(tmp_path, peaks_mz_list, name="spectra_filtered.npz"):
 
 
 def test_bin_mz_all_invalid_returns_zeros(tmp_path):
-    # All m/z <=0 -> valid_mask.any() False branch :contentReference[oaicite:22]{index=22}
+    # All m/z <=0 -> valid_mask.any() False branch 
     npz = _make_npz(tmp_path, [[0.0, 0.0], [0.0]])
     out = bm.bin_mz(str(npz), bin_size=10.0, mz_min=50.0, mz_max=150.0, is_normalized=False)
     assert isinstance(out, torch.Tensor)
@@ -25,7 +25,7 @@ def test_bin_mz_all_invalid_returns_zeros(tmp_path):
 
 
 def test_bin_mz_not_normalized_binning_and_clamp_and_padding(tmp_path):
-    # Two spectra: the second is shorter, padding is automatically filled with 0, and finally bins[~valid_mask]=0 :contentReference[oaicite:23]{index=23}
+    # Two spectra: the second is shorter, padding is automatically filled with 0, and finally bins[~valid_mask]=0 
     # Set parameters: mz_min=50, mz_max=150, bin_size=10 => n_bins=10
     # mz=50 -> floor((50-50)/10)=0
     # mz=55 -> 0
@@ -51,7 +51,7 @@ def test_bin_mz_not_normalized_binning_and_clamp_and_padding(tmp_path):
 
 
 def test_bin_mz_normalized_branch(tmp_path):
-    # is_normalized=True: bins = floor(clamped * n_bins) :contentReference[oaicite:24]{index=24}
+    # is_normalized=True: bins = floor(clamped * n_bins) 
     # n_bins = ceil((mz_max-mz_min)/bin_size), still calculated according to parameters here
     # For simplicity: mz_min=0, mz_max=1, bin_size=0.1 => n_bins=10
     # 0.0 -> 0, 0.05 -> 0, 0.99 -> 9, 1.0 -> floor(10)=10 -> clamp->9

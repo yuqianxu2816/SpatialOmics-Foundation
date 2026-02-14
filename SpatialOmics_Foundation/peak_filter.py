@@ -80,7 +80,7 @@ def scale_intensity(
     max_rank: Optional[int] = None,
 ) -> Callable[[np.ndarray], np.ndarray]:
     """
-    Normalize intensities relative to the most intense peak to a specified maximum value.
+    Normalize intensities relative to the most intense peak to a specified maximum value (optional).
     Scale peak intensities using various methods: root, log, or rank transformation.
     """
     def _fn(peaks: np.ndarray) -> np.ndarray:

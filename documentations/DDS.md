@@ -13,6 +13,27 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 
 ## Calculation Steps
 
+### Module 0 — Data Preparation (FTP → mzML → MGF)
+
+This module describes the initial data preparation step before model processing.
+
+#### Input
+
+- Raw LC-MS/MS files downloaded from the public FTP dataset source: https://www.ebi.ac.uk/pride/archive/projects/PXD047546 
+- Vendor-specific raw format (`.raw`).
+
+#### Process
+
+1. Download raw files from the FTP dataset repository.
+2. Convert `.raw` files to open-format `.mzML` using **ProteoWizard (msconvert)**.
+3. Extract MS/MS (MS2) spectra from `.mzML`.
+4. Save spectra as `.mgf`, where each `BEGIN IONS … END IONS` block represents one spectrum.
+
+#### Output
+
+- `.mzML` files (intermediate open format)
+- `.mgf` files (direct input for downstream modules)
+
 
 ### Module 1 — Read the MGF file
 

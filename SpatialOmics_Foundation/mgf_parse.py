@@ -15,7 +15,10 @@ def _parse_charge(val: str) -> Optional[int]:
     # take first token before whitespace or comma
     tok = s.replace(",", " ").split()[0]
     tok = tok.replace("+", "").replace("-", "")
-    return int(tok) if tok.isdigit() else None
+    if tok.isdigit():
+        return int(tok)
+    else:
+        return None
 
 def _parse_pepmass(val: str) -> Optional[float]:
     # common form: "512.34" or "512.34 12345.6"

@@ -11,21 +11,21 @@ def test_to_array_none_and_empty_and_bad_shape():
     assert pf._to_array([]).shape == (0, 2)
 
     with pytest.raises(ValueError):
-        pf._to_array([1, 2, 3])  # ndim is worng
+        pf._to_array([1, 2, 3])  # testing whether is a 2D array
 
     with pytest.raises(ValueError):
-        pf._to_array([[1, 2, 3]])  # (N,3) is wrong
+        pf._to_array([[1, 2, 3]])  # is a two D array, but (N,3) is wrong, should be (N, 2), two columns for mz and intensity, not three
 
 
 def test_set_mz_range_noop_and_swap_and_infer():
     peaks = np.array([[100.0, 1.0], [200.0, 2.0], [300.0, 3.0]])
 
-    # both None -> infer from data，equal to no-op（keep all）
+    # mz_min and mz_max both None -> infer from data branch -> keep all 3 peaks
     fn = pf.set_mz_range(None, None)
     out = fn(peaks)
     assert out.shape[0] == 3
 
-    # max < min -> swap branch
+    # max < min -> swap
     fn2 = pf.set_mz_range(250.0, 150.0)
     out2 = fn2(peaks)
     # keep in [150,250] => only 200
@@ -41,7 +41,7 @@ def test_set_mz_range_noop_and_swap_and_infer():
 
 def test_remove_precursor_peak_invalid_unit_raises():
     with pytest.raises(ValueError):
-        pf.remove_precursor_peak(1.0, unit="meter")  # unit branch :not in {"Da","ppm"}
+        pf.remove_precursor_peak(1.0, unit="meter")  # unit: not in {"Da","ppm"}
 
 
 def test_remove_precursor_peak_branch_no_precursor_and_with_precursor_Da():
@@ -49,7 +49,7 @@ def test_remove_precursor_peak_branch_no_precursor_and_with_precursor_Da():
 
     fn = pf.remove_precursor_peak(tol=0.5, unit="Da")
 
-    # branch: precursor_mz missing
+    # precursor_mz missing -> keep all 3 peaks (unable to recognize precursor peak)
     out_no = fn(peaks, precursor_mz=None)
     assert out_no.shape[0] == 3
 
@@ -61,12 +61,12 @@ def test_remove_precursor_peak_branch_no_precursor_and_with_precursor_Da():
 def test_scale_intensity_none_root_log_rank_and_errors():
     peaks = np.array([[100.0, -1.0], [200.0, 4.0], [300.0, 9.0]])
 
-    # scaling None: Negative values will be clipped to 0 (but not discarded)
+    # no scaling: -1 -> 0 
     fn_none = pf.scale_intensity(None)
     out_none = fn_none(peaks)
     assert out_none[0, 1] == 0.0
 
-    # root: sqrt(4)=2, sqrt(9)=3
+    # root: sqrt(4)=2
     fn_root = pf.scale_intensity("root", degree=2)
     out_root = fn_root(peaks)
     assert abs(out_root[1, 1] - 2.0) < 1e-9
@@ -75,20 +75,18 @@ def test_scale_intensity_none_root_log_rank_and_errors():
     # log: log2(inten+1)
     fn_log = pf.scale_intensity("log", base=2)
     out_log = fn_log(np.array([[100.0, 3.0]]))
-    assert abs(out_log[0, 1] - 2.0) < 1e-9  # log2(4)=2
+    assert abs(out_log[0, 1] - 2.0) < 1e-9
 
-    # rank: The one with the highest intensity has the highest rank
+    # rank: highest intensity has the highest rank
     fn_rank = pf.scale_intensity("rank")
     out_rank = fn_rank(np.array([[1.0, 10.0], [2.0, 1.0], [3.0, 5.0]]))
     # The peak with intensity=10 should have the highest rank
     max_rank_idx = np.argmax(out_rank[:, 1])
     assert out_rank[max_rank_idx, 0] == 1.0
 
-    # max_rank < n should raise an error
     with pytest.raises(ValueError):
         pf.scale_intensity("rank", max_rank=2)(np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]))
 
-    # unsupported scaling -> should raise an error
     with pytest.raises(ValueError):
         pf.scale_intensity("weird")(peaks)
 

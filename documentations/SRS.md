@@ -20,7 +20,6 @@ The software accepts the following data formats:
 - **`.mgf`**  
   MS/MS spectra used as the direct model input for training and embedding extraction.
 
----
 
 ### 1.2 Output
 

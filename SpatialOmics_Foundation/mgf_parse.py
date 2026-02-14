@@ -1,4 +1,3 @@
-# spatialomics_foundation/mgf_parse.py
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
@@ -6,14 +5,14 @@ from typing import Any, Dict, List, Optional, Tuple
 Spectrum = Dict[str, Any]  # {"meta": {...}, "peaks": [(mz, intensity), ...]}
 
 def _parse_charge(val: str) -> Optional[int]:
-    # common forms: "2+", "2", "2+ and 3+" (we take the first)
     if val is None:
         return None
     s = str(val).strip()
     if not s:
         return None
-    # take first token before whitespace or comma
     tok = s.replace(",", " ").split()[0]
+    # take first token before whitespace or comma
+    # 2+ -> 2, 3- -> 3
     tok = tok.replace("+", "").replace("-", "")
     if tok.isdigit():
         return int(tok)
@@ -21,12 +20,12 @@ def _parse_charge(val: str) -> Optional[int]:
         return None
 
 def _parse_pepmass(val: str) -> Optional[float]:
-    # common form: "512.34" or "512.34 12345.6"
     if val is None:
         return None
     s = str(val).strip()
     if not s:
         return None
+    # take first token: "512.34" -> 512.34, "512.34 9999" -> 512.34
     first = s.split()[0]
     try:
         return float(first)
@@ -53,13 +52,12 @@ def parse_mgf(path: str) -> List[Spectrum]:
 
             if line.upper() == "END IONS":
                 if in_block:
-                    # normalize meta fields to your canonical names
-                    canon = {
+                    meta_data = {
                         "PEPMASS": _parse_pepmass(meta.get("PEPMASS")),
                         "CHARGE": _parse_charge(meta.get("CHARGE")),
                         "RTINSECONDS": float(meta["RTINSECONDS"]) if "RTINSECONDS" in meta else None,
                     }
-                    spectra.append({"meta": canon, "peaks": peaks})
+                    spectra.append({"meta": meta_data, "peaks": peaks})
                 in_block = False
                 continue
 
@@ -69,6 +67,7 @@ def parse_mgf(path: str) -> List[Spectrum]:
             # metadata line: KEY=VALUE
             if "=" in line and not line[0].isdigit():
                 k, v = line.split("=", 1)
+                # CHARGE=2+ -> meta["CHARGE"] = "2+"
                 meta[k.strip().upper()] = v.strip()
                 continue
 
@@ -98,11 +97,11 @@ OUT_NPZ  = "output/spectra_raw.npz"
 def save_spectra_npz(spectra, out_path: str):
     """
     Save spectra as NPZ:
-      - meta_pepmass: (S,)
-      - meta_charge:  (S,)
-      - meta_rt:      (S,)
-      - peaks_mz:     object array, each item is (Ni,) float64
-      - peaks_int:    object array, each item is (Ni,) float64
+      - meta_pepmass
+      - meta_charge
+      - meta_rt
+      - peaks_mz
+      - peaks_int
     """
     S = len(spectra)
     meta_pepmass = np.full((S,), np.nan, dtype=float)
@@ -174,7 +173,6 @@ def main():
     save_spectra_npz(spectra, OUT_NPZ)
     print(f"[mgf_parse] saved -> {OUT_NPZ}")
 
-    # quick sanity reload
     s2 = load_spectra_npz(OUT_NPZ)
     print(f"[mgf_parse] reload check: {len(s2)} spectra, first num_peaks={len(s2[0]['peaks']) if len(s2)>0 else 0}")
 

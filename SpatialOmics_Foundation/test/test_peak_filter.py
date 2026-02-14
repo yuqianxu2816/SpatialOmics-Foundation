@@ -100,28 +100,31 @@ def test_filter_intensity_threshold_max_peaks_and_sorting():
         [150.0, 5.0],
     ])
 
+    # keep intensities > min_intensity * max_intensity,
+    # 0.2*10=2.0, so only 10 and 5 are kept
     fn = pf.filter_intensity(min_intensity=0.2, max_peaks=None)
-    # max intensity=10, threshold=2, and we keep those >2: 10 and 5
     out = fn(peaks)
     assert set(out[:, 0].tolist()) == {150.0, 300.0}
 
-    # max_peaks truncation branch
+    # max_peaks=1: only keep the strongest peak of intensity = 10
     fn2 = pf.filter_intensity(min_intensity=0.0, max_peaks=1)
     out2 = fn2(peaks)
     assert out2.shape[0] == 1
-    assert out2[0, 1] == 10.0  # The strongest peak
+    assert out2[0, 1] == 10.0 
 
-    # Result stability: sorted by mz
+    # sorted by mz
     fn3 = pf.filter_intensity(min_intensity=0.0, max_peaks=None)
     out3 = fn3(peaks)
     assert np.all(out3[:, 0] == np.sort(out3[:, 0]))
 
 
 def test_discard_low_quality_branch():
+    # At least 3 peaks are required, so 2 peaks should be discarded
     peaks = np.array([[100.0, 1.0], [200.0, 2.0]])
     fn = pf.discard_low_quality(min_peaks=3)
-    assert fn(peaks) is None  # Discard branch 
+    assert fn(peaks) is None
 
+    # At least 2 peaks are required, so 2 peaks should be kept
     fn2 = pf.discard_low_quality(min_peaks=2)
     out = fn2(peaks)
     assert out is not None
@@ -129,14 +132,14 @@ def test_discard_low_quality_branch():
 
 
 def test_scale_to_unit_norm_zero_norm_and_nonzero():
-    # All zero intensities -> norm=0 branch: remain unchanged 
+    # All zero intensities -> norm=0
     # L2 norm = srqt(0^2+0^2)=0 -> return original peaks without scaling
     peaks0 = np.array([[100.0, 0.0], [200.0, 0.0]])
     out0 = pf._scale_to_unit_norm(peaks0)
     assert np.all(out0[:, 1] == 0.0)
 
-    # Non-zero: L2 norm should be approximately 1
-    # norm = sqrt(3^2+4^2)=5 -> scaled intensities should be 0.6 and 0.8
+    # Non-zero: L2 norm should be 1
+    # norm = sqrt(3^2+4^2)=5 -> scaled intensities should be 3/5=0.6 and 4/5=0.8
     # sqrt(0.6^2+0.8^2)=1 -> unit norm achieved
     peaks = np.array([[100.0, 3.0], [200.0, 4.0]])
     out = pf._scale_to_unit_norm(peaks)
@@ -145,7 +148,7 @@ def test_scale_to_unit_norm_zero_norm_and_nonzero():
 
 
 def test_apply_preprocessing_pipeline_typeerror_fallback_branch():
-    # Let the pipeline contain both: functions that require precursor_mz (2 args) and those that do not (1 arg)
+    # pipeline contain both: functions require precursor_mz (2 args) and not (1 arg)
     peaks = np.array([[100.0, 1.0], [101.0, 2.0]])
 
     fn_need_prec = pf.remove_precursor_peak(tol=0.1, unit="Da")  # (peaks, precursor_mz)

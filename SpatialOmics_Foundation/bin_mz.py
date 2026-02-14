@@ -27,10 +27,12 @@ def bin_mz(npz_path, bin_size=0.5, mz_min=50.0, mz_max=2500.0, is_normalized=Fal
     for i, arr in enumerate(peaks_mz):
         mzs[i, :len(arr)] = arr
     mzs = torch.tensor(mzs, dtype=torch.float)
+    # number of bins and valid mask
     n_bins = int(np.ceil((mz_max - mz_min) / bin_size))
     valid_mask = mzs > 0
     if not valid_mask.any():
         return torch.zeros_like(mzs, dtype=torch.long)
+    # binning calculations
     if is_normalized:
         clamped = torch.clamp(mzs, min=0.0, max=1.0)
         bins = torch.floor(clamped * n_bins).long()

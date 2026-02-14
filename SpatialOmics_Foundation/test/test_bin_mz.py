@@ -24,7 +24,7 @@ def test_bin_mz_all_invalid_returns_zeros(tmp_path):
     assert torch.all(out == 0)
 
 
-def test_bin_mz_not_normalized_binning_and_clamp_and_padding(tmp_path):
+def test_not_normalized_bin_mz__binning_and_clamp_and_padding(tmp_path):
     # Two spectra: the second is shorter, padding is automatically filled with 0, and finally bins[~valid_mask]=0 
     # Set parameters: mz_min=50, mz_max=150, bin_size=10 => n_bins=10
     # mz=50 -> floor((50-50)/10)=0
@@ -50,7 +50,7 @@ def test_bin_mz_not_normalized_binning_and_clamp_and_padding(tmp_path):
     assert row1[3] == 0
 
 
-def test_bin_mz_normalized_branch(tmp_path):
+def test_normalized_bin_mz(tmp_path):
     # is_normalized=True: bins = floor(clamped * n_bins) 
     # Ex: clamped = 0.05
     # Ex: bins = torch.floor(0.05 × 10) = floor(0.5) = 0

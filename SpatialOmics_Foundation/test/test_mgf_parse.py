@@ -2,11 +2,10 @@ import math
 import numpy as np
 import pytest
 
- # Compatible with two import styles: direct mgf_parse.py in repo root, or as a future package in spatialomics_foundation/
 from SpatialOmics_Foundation import mgf_parse as m
 
 def _write_tiny_mgf(path):
-    # 2 BEGIN/END blocks; the second intentionally missing CHARGE / RTINSECONDS to test branch
+    # BEGIN/END blocks; first has bad lines; second misses meta data
     content = """BEGIN IONS
 PEPMASS=512.34 9999
 CHARGE=2+
@@ -31,7 +30,7 @@ def test_parse_mgf_spectrum_count(tmp_path):
 
     spectra = m.parse_mgf(str(mgf))
     assert isinstance(spectra, list)
-    assert len(spectra) == 2  # Spectrum count should be preserved (most important)
+    assert len(spectra) == 2  # Test spectrum count 
 
 
 def test_parse_mgf_peaks_validity_and_nonempty(tmp_path):
@@ -58,7 +57,7 @@ def test_parse_mgf_metadata_fields_and_missing_branch(tmp_path):
     assert abs(sp0["RTINSECONDS"] - 123.4) < 1e-6
 
     sp1 = spectra[1]["meta"]
-    # Branch coverage: missing fields -> None
+    # meta data missing -> return none
     assert sp1["CHARGE"] is None
     assert sp1["RTINSECONDS"] is None
     assert abs(sp1["PEPMASS"] - 700.0) < 1e-6
@@ -69,7 +68,7 @@ def test_parse_mgf_metadata_fields_and_missing_branch(tmp_path):
     [
         ("2+", 2),
         ("2", 2),
-        ("2+ and 3+", 2),   # Take the first token
+        ("2+ and 3+", 2),   # Multiple charges -> take the first token
         ("", None),
         (None, None),
         ("abc", None),
@@ -113,5 +112,5 @@ def test_save_and_load_npz_roundtrip(tmp_path):
     assert spectra2[0]["meta"]["CHARGE"] == 2
     assert abs(spectra2[0]["meta"]["PEPMASS"] - 512.34) < 1e-6
 
-    # peaks length should match (not required to be identical row by row, but we check strictly here)
+    # peaks length should match
     assert len(spectra2[0]["peaks"]) == len(spectra[0]["peaks"])

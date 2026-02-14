@@ -5,10 +5,10 @@ import torch
 def bin_mz(npz_path, bin_size=0.5, mz_min=50.0, mz_max=2500.0, is_normalized=False):
     """
     Fixed-width binning for spectra_filtered.npz
-    - Uses floor for binning
-    - Clamps m/z to [mz_min, mz_max] or [0, 1] if normalized
-    - Bins limited to [0, n_bins-1]
-    - Invalid (padded) positions (m/z <= 0) set to 0
+        Uses floor for binning
+        Clamps m/z to [mz_min, mz_max] or [0, 1] if normalized
+        Bins limited to [0, n_bins-1]
+        Invalid (padded) positions (m/z <= 0) set to 0
     Args:
         npz_path: path to spectra_filtered.npz
         bin_size: bin width

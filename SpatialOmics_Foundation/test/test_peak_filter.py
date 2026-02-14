@@ -148,7 +148,7 @@ def test_scale_to_unit_norm_zero_norm_and_nonzero():
 
 
 def test_apply_preprocessing_pipeline_typeerror_fallback_branch():
-    # pipeline contain both: functions require precursor_mz (2 args) and not (1 arg)
+    # pipeline contain both: functions require precursor_mz (2 args) and not require (1 arg)
     peaks = np.array([[100.0, 1.0], [101.0, 2.0]])
 
     fn_need_prec = pf.remove_precursor_peak(tol=0.1, unit="Da")  # (peaks, precursor_mz)

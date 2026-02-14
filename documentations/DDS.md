@@ -103,7 +103,7 @@ The first four functions follow the same high-level ideas as an external spectru
 
 - **scale_intensity**
   - Supports root / log / rank scaling.
-  - Reduced to minimal options needed for this pipeline, focusing on stable normalization.
+  - Other than the external reference, adds on an optional "scale relative to max peak" step (`max_intensity`) before scalings
 
 - **filter_intensity**
   - Removes low-intensity peaks and keeps top-N peaks.

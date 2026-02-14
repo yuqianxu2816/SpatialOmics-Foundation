@@ -19,7 +19,7 @@ def bin_mz(npz_path, bin_size=0.5, mz_min=50.0, mz_max=2500.0, is_normalized=Fal
         bins: torch.LongTensor, shape (N, L)
     """
     d = np.load(npz_path, allow_pickle=True)
-    peaks_mz = d['peaks_mz']  # object array, each item is (Ni,) float64
+    peaks_mz = d['peaks_mz']
     S = len(peaks_mz)
     max_len = max(len(mz) for mz in peaks_mz)
     # Pad to max_len

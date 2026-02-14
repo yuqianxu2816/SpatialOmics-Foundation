@@ -9,8 +9,6 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 - Final output: predicted disease label ∈ {cirrhosis, HCC}
 ---
 
-### add module 0 and extra filters.
-
 ## Calculation Steps
 
 ### Module 0 — Data Preparation (FTP → mzML → MGF)
@@ -67,25 +65,63 @@ Parse MGF-formatted files and convert each MS/MS spectrum into a standardized in
   - "meta": Dict[str, Any],      # e.g., {"PEPMASS": 512.34, "CHARGE": 2, "RTINSECONDS": 1234.5}
   - peaks": List[Tuple[float, float]]  # [(mz1, inten1), (mz2, inten2), ...]
 - }  
+
 ### Module 2 — Extract the (m/z, intensity) pairs from each spectrum
 
 Filter raw peak lists from spectrum objects and produce cleaned numeric representations suitable for downstream preprocessing and binning.
 
 **Input**
+
 - One Spectrum object from Step 1
 - Spectrum["peaks"] = List[(mz, intensity)]
 
-**Filtering**
-- remove zero or negative intensity
-- restrict m/z range
-- keep top-N peaks
+**Filtering (implemented in `peak_filter.py`)**
+
+The preprocessing pipeline consists of six functions:
+
+- `set_mz_range`
+- `remove_precursor_peak`
+- `scale_intensity`
+- `filter_intensity`
+- `discard_low_quality`
+- `_scale_to_unit_norm`
+
+
+**Design inspirations (simplified from external reference implementation)**
+
+External reference: https://github.com/bittremieuxlab/spectrum_utils/blob/main/spectrum_utils/spectrum.py
+
+The first four functions follow the same high-level ideas as an external spectrum preprocessing implementation, but are simplified for this project:
+
+- **set_mz_range**
+  - Keeps peaks within a valid m/z range.
+  - Simplified to direct array filtering without object-based spectrum manipulation.
+
+- **remove_precursor_peak**
+  - Removes peaks around precursor m/z.
+  - Simplified to a direct tolerance-based filter (Da / ppm) without isotope modeling.
+
+- **scale_intensity**
+  - Supports root / log / rank scaling.
+  - Reduced to minimal options needed for this pipeline, focusing on stable normalization.
+
+- **filter_intensity**
+  - Removes low-intensity peaks and keeps top-N peaks.
+  - Implemented as a lightweight NumPy-based filter with optional relative thresholding.
+
+Overall, `peak_filter.py` keeps the core preprocessing logic but removes complex spectrum object dependencies and advanced annotation-related operations, making the pipeline more concise and easier to integrate into deep learning preprocessing.
+
 
 **Output**
+
 - Numeric peak list (possibly cleaned or filtered)
 
 **Output format**
+
 - peaks: Array[N, 2]
- - column 0 = m/z, column 1 = intensity
+  - column 0 = m/z
+  - column 1 = intensity
+
 
 ### Module 3 — Discretize / tokenize the spectrum (m/z binning)
 

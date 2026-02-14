@@ -107,7 +107,7 @@ The first four functions follow the same high-level ideas as an external spectru
 
 - **filter_intensity**
   - Removes low-intensity peaks and keeps top-N peaks.
-  - Implemented as a lightweight NumPy-based filter with optional relative thresholding.
+  - Implemented as a lightweight NumPy-based filter with relative thresholding.
 
 Overall, `peak_filter.py` keeps the core preprocessing logic but removes complex spectrum object dependencies and advanced annotation-related operations, making the pipeline more concise and easier to integrate into deep learning preprocessing.
 

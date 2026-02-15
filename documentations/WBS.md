@@ -1,3 +1,6 @@
+### Biological Context:
+Input spectra are derived from workflows related to spatial glycan imaging studies of HCC, where spatial molecular heterogeneity motivates downstream representation learning.
+
 ## Problem 1B
 
 ## Generate MGF Spectra as the First Basic Output

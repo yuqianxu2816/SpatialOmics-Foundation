@@ -29,7 +29,6 @@ The pipeline supports three levels of input data:
   MS/MS spectra format used as the direct input for the self-supervised model.  
   Each `BEGIN IONS … END IONS` block represents one spectrum.
 
----
 
 ### Output
 

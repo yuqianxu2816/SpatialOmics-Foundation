@@ -19,7 +19,7 @@ def mzml_to_mgf(
     mzml_path: str,
     mgf_out_path: str,
     ms_level: int = 2
-) -> int:
+) -> int: 
     """
     Convert an mzML file to an MGF file by extracting spectra of a given MS level.
 

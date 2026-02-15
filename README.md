@@ -1,8 +1,17 @@
 # SpatialOmics-Foundation
 
-## Goal:
+## Biological Question
 
-Single-cell and spatial MS, through MSI, mass cytometry, and nanoPOTS, advances T1D research from "average molecular changes" to "spatial and cellular-level molecular heterogeneity," enabling the first direct analysis of the islet microenvironment, immune cell infiltration pathways, and β-cell-specific molecular imbalances at the tissue scale.
+Can we use mass spectrometry data to learn meaningful molecular representations that help distinguish **hepatocellular carcinoma (HCC)** from **cirrhosis**?
+
+More specifically:
+
+- Serum LC-MS/MS data contains thousands of MS/MS spectra reflecting underlying protein and glycoprotein states.
+- Instead of relying on manually designed features, can we automatically learn representations from spectra themselves?
+- Do these learned representations capture disease-related molecular patterns that support classification between HCC and cirrhosis?
+
+This project explores a **representation learning approach for spatial and proteomics-related mass spectrometry data**, aiming to understand whether self-supervised learning can reveal biologically meaningful structure from highly heterogeneous clinical samples.
+
 
 ## Input and Output
 
@@ -33,5 +42,31 @@ The pipeline produces:
   - HCC vs. cirrhosis
 - Basic visualization (e.g., PCA / UMAP)
 
+--- 
 
+## Overview
+
+Mass spectrometry experiments generate a large number of spectra, each containing pairs of **m/z values and intensities**. Traditionally, downstream analysis depends heavily on manual feature engineering and labeled datasets, which can be limiting for small or heterogeneous biomedical datasets.
+
+This project takes a different approach:
+
+1. Convert raw LC-MS/MS data into standardized MS/MS spectra (MGF format)
+2. Treat each spectrum as a learning object
+3. Use **self-supervised masked learning** to train a model that reconstructs missing spectral information
+4. Extract fixed-dimensional embeddings that summarize each spectrum
+5. Aggregate spectrum embeddings into sample-level representations
+6. Perform a simple downstream classification task (**HCC vs. cirrhosis**) to evaluate whether the learned embeddings capture disease-related structure
+
+In short:
+
+> Instead of manually defining features, we let the model learn how spectra are structured, and then test whether the learned representations are useful for disease differentiation.
+
+---
+
+## Project Goal (Simple Summary)
+
+- Learn general-purpose spectral embeddings from MS/MS data
+- Reduce dependence on manual feature engineering
+- Test whether learned embeddings separate HCC and cirrhosis
+- Build a modular pipeline from raw MS data to downstream biological interpretation
 Note: for all the md documents except DDS.md, I used AI to format the documents such as organizing bullet points.

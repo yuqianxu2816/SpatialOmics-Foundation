@@ -9,6 +9,10 @@ For each MS/MS spectrum, calculate an embedding vector of a fixed dimension.
 - Final output: predicted disease label ∈ {cirrhosis, HCC}
 ---
 
+
+### Note:
+Although the computational modules operate on MS/MS spectra, the biological motivation originates from spatial omics studies where tissue-level molecular heterogeneity motivates representation learning.
+
 ## Calculation Steps
 
 ### Module 0 — Data Preparation (FTP → mzML → MGF)
@@ -31,7 +35,6 @@ This module describes the initial data preparation step before model processing.
 
 - `.mzML` files (intermediate open format)
 - `.mgf` files (direct input for downstream modules)
-
 
 ### Module 1 — Read the MGF file
 

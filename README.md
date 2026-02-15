@@ -19,6 +19,28 @@ More specifically:
 
 This project explores a **representation learning approach for spatial and proteomics-related mass spectrometry data**, aiming to understand whether self-supervised learning can reveal biologically meaningful structure from highly heterogeneous clinical samples.
 
+---
+
+## Overview
+
+Mass spectrometry experiments generate a large number of spectra, each containing pairs of **m/z values and intensities**. Traditionally, downstream analysis depends heavily on manual feature engineering and labeled datasets, which can be limiting for small or heterogeneous biomedical datasets.
+
+This project takes a different approach:
+
+Instead of directly modeling spatial omics images, this project focuses on learning transferable representations from MS/MS spectra derived from spatial-omics-related workflows.
+
+1. Convert raw LC-MS/MS data into standardized MS/MS spectra (MGF format)
+2. Treat each spectrum as a learning object
+3. Use **self-supervised masked learning** to train a model that reconstructs missing spectral information
+4. Extract fixed-dimensional embeddings that summarize each spectrum
+5. Aggregate spectrum embeddings into sample-level representations
+6. Perform a simple downstream classification task (**HCC vs. cirrhosis**) to evaluate whether the learned embeddings capture disease-related structure
+
+In short:
+
+> Instead of manually defining features, we let the model learn how spectra are structured, and then test whether the learned representations are useful for disease differentiation.
+
+---
 
 ## Input and Output
 
@@ -49,25 +71,6 @@ The pipeline produces:
 - Basic visualization (e.g., PCA / UMAP)
 
 --- 
-
-## Overview
-
-Mass spectrometry experiments generate a large number of spectra, each containing pairs of **m/z values and intensities**. Traditionally, downstream analysis depends heavily on manual feature engineering and labeled datasets, which can be limiting for small or heterogeneous biomedical datasets.
-
-This project takes a different approach:
-
-1. Convert raw LC-MS/MS data into standardized MS/MS spectra (MGF format)
-2. Treat each spectrum as a learning object
-3. Use **self-supervised masked learning** to train a model that reconstructs missing spectral information
-4. Extract fixed-dimensional embeddings that summarize each spectrum
-5. Aggregate spectrum embeddings into sample-level representations
-6. Perform a simple downstream classification task (**HCC vs. cirrhosis**) to evaluate whether the learned embeddings capture disease-related structure
-
-In short:
-
-> Instead of manually defining features, we let the model learn how spectra are structured, and then test whether the learned representations are useful for disease differentiation.
-
----
 
 ## Project Goal (Simple Summary)
 

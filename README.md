@@ -2,7 +2,7 @@
 
 ## Biological Background (Spatial Omics Context)
 
-This project is inspired by spatial omics studies of hepatocellular carcinoma (HCC), where MALDI-based spatial glycan imaging reveals strong molecular heterogeneity within tumor tissue. Link to the paper which the project got inspirations: https://www.nature.com/articles/s43856-024-00677-7 
+This project is inspired by spatial omics studies of hepatocellular carcinoma (HCC), where MALDI-based spatial glycan imaging reveals strong molecular heterogeneity within tumor tissue ([Wang et al., 2024](https://www.nature.com/articles/s43856-024-00677-7)).
 
 Spatial omics provides the biological motivation by identifying disease-associated glycan patterns in tissue and serum.  
 

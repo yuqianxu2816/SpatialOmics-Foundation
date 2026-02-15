@@ -1,5 +1,5 @@
 [project]
-name = "spatialomics-foundation"
+name = "MS-Spectral-Foundation"
 version = "0.1.0"
 description = "Self-supervised foundation model for spatial omics and mass spectrometry"
 authors = [

@@ -10,7 +10,7 @@ This project focuses on the computational side: learning general spectral repres
 
 ## Biological Question
 
-Can we use mass spectrometry data to learn meaningful molecular representations that help distinguish **hepatocellular carcinoma (HCC)** from **cirrhosis**?
+Do learned spectral embeddings reveal systematic molecular shifts between HCC and cirrhosis serum samples, as reflected by embedding-space distribution differences and exemplar spectra?
 
 More specifically:
 

@@ -18,7 +18,7 @@ More specifically:
 - Instead of relying on manually designed features, can we automatically learn representations from spectra themselves?
 - Do these learned representations capture disease-related molecular patterns that support classification between HCC and cirrhosis?
 
-This project explores a **representation learning approach for spatial and proteomics-related mass spectrometry data**, aiming to understand whether self-supervised learning can reveal biologically meaningful structure from highly heterogeneous clinical samples.
+This project explores a representation learning approach for **proteomics-related mass spectrometry data** inspired by spatial omics studies, aiming to understand whether self-supervised learning can reveal biologically meaningful structure from highly heterogeneous clinical samples.
 
 ---
 

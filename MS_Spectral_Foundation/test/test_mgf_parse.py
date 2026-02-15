@@ -2,7 +2,7 @@ import math
 import numpy as np
 import pytest
 
-from SpatialOmics_Foundation import mgf_parse as m
+from MS_Spectral_Foundation import mgf_parse as m
 
 def _write_tiny_mgf(path):
     # BEGIN/END blocks; first has bad lines; second misses meta data

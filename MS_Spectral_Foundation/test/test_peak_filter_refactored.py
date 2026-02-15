@@ -3,7 +3,7 @@ import pytest
 
 
 
-from SpatialOmics_Foundation import peak_filter_refactored as pf
+from MS_Spectral_Foundation import peak_filter_refactored as pf
 
 
 def test_to_array_none_and_empty_and_bad_shape():

@@ -3,7 +3,7 @@ import pytest
 import torch
 
 
-from SpatialOmics_Foundation import bin_mz as bm
+from MS_Spectral_Foundation import bin_mz as bm
 
 def _make_npz(tmp_path, peaks_mz_list, name="spectra_filtered.npz"):
     # peaks_mz must be an object array, each item is (Ni,) float

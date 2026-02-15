@@ -5,6 +5,7 @@
 This project is inspired by spatial omics studies of hepatocellular carcinoma (HCC), where MALDI-based spatial glycan imaging reveals strong molecular heterogeneity within tumor tissue.
 
 Spatial omics provides the biological motivation by identifying disease-associated glycan patterns in tissue and serum.  
+
 This project focuses on the computational side: learning general spectral representations from MS/MS data derived from these experiments using self-supervised learning.
 
 ## Biological Question

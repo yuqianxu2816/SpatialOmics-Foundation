@@ -1,4 +1,4 @@
-# SpatialOmics-Foundation
+# MS-Spectral-Foundation
 
 ## Biological Background (Spatial Omics Context)
 
